@@ -1,270 +1,269 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Draw Hello Kitty</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DrawHelloKitty</title>
   <style>
     body {
-      background: linear-gradient(to right, #ffc0cb, #ffe4e1);
       font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to bottom right, #ffe4f1, #ffc1e3);
       text-align: center;
+      padding: 30px;
       color: #d63384;
     }
+
     h1 {
-      margin-top: 10px;
+      font-size: 40px;
+      color: #ff4da6;
     }
-    canvas {
-      border: 5px solid #ff69b4;
-      background-color: #fff0f5;
-      border-radius: 10px;
-      touch-action: none;
+
+    .toolbox {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 20px;
     }
-    .tools {
-      margin: 10px;
+
+    .section {
+      background: #ffe6f0;
+      padding: 15px;
+      border-radius: 15px;
+      box-shadow: 0 4px 6px #ff8ac6;
     }
-    button, input[type="color"] {
-      margin: 5px;
-      padding: 10px;
-      background-color: #ffb6c1;
+
+    .section h3 {
+      margin-bottom: 10px;
+      color: #ff3399;
+    }
+
+    button, select, input[type="text"], input[type="color"] {
+      font-family: inherit;
+      background: #ffb3d9;
       border: none;
-      border-radius: 5px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #ff69b4;
-      color: white;
-    }
-    .character {
-      width: 100px;
-      margin: 20px auto;
-    }
-    .presets img {
-      width: 80px;
+      padding: 8px 12px;
       margin: 5px;
+      border-radius: 8px;
+      box-shadow: 2px 2px 0 #ff5caa;
       cursor: pointer;
-      border: 2px solid transparent;
     }
-    .presets img:hover {
-      border-color: #ff69b4;
+
+    button:hover, select:hover {
+      background: #ff99cc;
     }
-    @media (max-width: 600px) {
-      canvas {
-        width: 90vw;
-        height: 60vh;
-      }
+
+    #canvas {
+      border: 4px dotted #fff;
+      background: #ff66b2;
+      margin-top: 30px;
+      border-radius: 12px;
+    }
+
+    footer {
+      margin-top: 30px;
+      font-size: 16px;
+      color: #aa1166;
     }
   </style>
 </head>
 <body>
-  <h1>🎀 Draw Hello Kitty 🎀</h1>
+  <h1>Welcome to DrawHelloKitty!</h1>
 
-  <div class="tools">
-    <button onclick="setTool('brush')">🖌️ Brush</button>
-    <button onclick="setTool('stamp')">🌟 Emoji</button>
-    <button onclick="setTool('fill')">🪣 Fill</button>
-    <button onclick="setShape('circle')">⚪ Circle</button>
-    <button onclick="setShape('square')">⬛ Square</button>
-    <button onclick="setShape('triangle')">🔺 Triangle</button>
-    <button onclick="setShape('line')">📏 Line</button>
-    <input type="color" id="colorPicker">
-    <button onclick="clearCanvas()">🧹 Clear</button>
-    <button onclick="downloadImage()">📥 Download</button>
+  <div class="toolbox">
+
+    <div class="section">
+      <h3>Brush Type:</h3>
+      <select id="brushType">
+        <option value="crayon">Crayon</option>
+        <option value="marker">Marker</option>
+        <option value="eraser">Eraser</option>
+      </select>
+      <h3>Choose Color:</h3>
+      <input type="color" id="colorPicker" />
+      <h3>Size:</h3>
+      <input type="range" id="sizeSlider" min="1" max="30" value="5"/>
+    </div>
+
+    <div class="section">
+      <h3>Draw Shape:</h3>
+      <button onclick="drawShape('circle')">Circle</button>
+      <button onclick="drawShape('square')">Square</button>
+      <button onclick="drawShape('line')">Line</button>
+      <button onclick="drawShape('triangle')">Triangle</button>
+      <button onclick="enableFreeDraw()">Free Draw</button>
+    </div>
+
+    <div class="section">
+      <h3>Stamp & Emoji:</h3>
+      <button onclick="stampEmoji('😺')">😺</button>
+      <button onclick="stampEmoji('🌸')">🌸</button>
+      <button onclick="stampEmoji('😊')">😊</button>
+      <h3>Name:</h3>
+      <input type="text" id="nameInput" placeholder="Enter your name"/>
+      <button onclick="addName()">Add Name</button>
+    </div>
+
+    <div class="section">
+      <h3>Save:</h3>
+      <button onclick="saveImage('jpeg')">Save JPEG</button>
+      <button onclick="saveImage('png')">Save PNG</button>
+      <button onclick="saveImage('svg')">Save SVG</button>
+      <button onclick="saveImage('pdf')">Save PDF</button>
+    </div>
+
+    <div class="section">
+      <h3>Image Presets:</h3>
+      <select id="presetSelect" onchange="loadPreset()">
+        <option value="">--Choose--</option>
+        <option value="rainbow">Rainbow</option>
+        <option value="kitty">Hello Kitty</option>
+        <option value="house">House</option>
+      </select>
+      <h3>Background Theme:</h3>
+      <select onchange="changeTheme(this.value)">
+        <option value="pink">Pink</option>
+        <option value="sky">Sky Blue</option>
+        <option value="mint">Mint Green</option>
+      </select>
+    </div>
+
+    <div class="section">
+      <button onclick="toggleEraser()">Toggle Eraser</button>
+      <button onclick="clearCanvas()">Clear</button>
+      <button onclick="fillCanvas()">Fill Color</button>
+    </div>
+
   </div>
 
-  <canvas id="draw" width="600" height="400"></canvas>
-  <div>
-    <input type="text" id="nameTag" placeholder="Type your name">
-    <button onclick="addName()">Add Name 📝</button>
-  </div>
+  <canvas id="canvas" width="700" height="500"></canvas>
 
-  <div class="presets">
-    <h3>🖼️ Trace These!</h3>
-    <img src="https://i.imgur.com/w1URYYC.png" onclick="loadPreset(this.src)">
-    <img src="https://i.imgur.com/3eJpc0D.png" onclick="loadPreset(this.src)">
-  </div>
-
-  <img src="https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif" alt="Hello Kitty" class="character" id="kitty">
-
-  <audio id="hoverSound" src="https://www.soundjay.com/human/female-hello-1.mp3" preload="auto"></audio>
+  <footer>Created with ❤️ by Nakshatra</footer>
 
   <script>
-    const canvas = document.getElementById("draw");
+    const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
-    let drawing = false, tool = 'brush', shapeMode = null;
-    let startX, startY;
 
-    canvas.addEventListener('mousedown', startDraw);
-    canvas.addEventListener('touchstart', startDraw, { passive: false });
+    let drawing = false;
+    let brushColor = "#000000";
+    let brushSize = 5;
+    let isEraser = false;
 
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('touchmove', draw, { passive: false });
+    document.getElementById("colorPicker").oninput = e => brushColor = e.target.value;
+    document.getElementById("sizeSlider").oninput = e => brushSize = e.target.value;
 
-    canvas.addEventListener('mouseup', stopDraw);
-    canvas.addEventListener('mouseleave', stopDraw);
-    canvas.addEventListener('touchend', stopDraw);
+    canvas.onmousedown = () => drawing = true;
+    canvas.onmouseup = () => drawing = false;
+    canvas.onmouseleave = () => drawing = false;
 
-    function setTool(t) {
-      tool = t;
-      shapeMode = null;
-    }
-
-    function setShape(s) {
-      shapeMode = s;
-      tool = 'shape';
-    }
-
-    function startDraw(e) {
-      e.preventDefault();
-      const rect = canvas.getBoundingClientRect();
-      const x = (e.clientX || e.touches[0].clientX) - rect.left;
-      const y = (e.clientY || e.touches[0].clientY) - rect.top;
-      drawing = true;
-      startX = x; startY = y;
-      if (tool === 'fill') fillColor(x, y);
-      else if (tool === 'stamp') drawStamp(x, y);
-    }
+    canvas.onmousemove = draw;
 
     function draw(e) {
-      if (!drawing || tool === 'fill' || tool === 'stamp') return;
-      const rect = canvas.getBoundingClientRect();
-      const x = (e.clientX || e.touches[0].clientX) - rect.left;
-      const y = (e.clientY || e.touches[0].clientY) - rect.top;
+      if (!drawing) return;
+      const x = e.offsetX;
+      const y = e.offsetY;
+      ctx.fillStyle = isEraser ? "#ff66b2" : brushColor;
+      ctx.beginPath();
+      ctx.arc(x, y, brushSize / 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
 
-      if (tool === 'brush') {
-        ctx.lineWidth = 4;
-        ctx.lineCap = "round";
-        ctx.strokeStyle = document.getElementById("colorPicker").value;
-        ctx.lineTo(x, y);
-        ctx.stroke();
-        ctx.beginPath();
+    function drawShape(shape) {
+      ctx.fillStyle = brushColor;
+      const x = 150;
+      const y = 150;
+      ctx.beginPath();
+      if (shape === "circle") ctx.arc(x, y, 40, 0, 2 * Math.PI);
+      else if (shape === "square") ctx.rect(x, y, 80, 80);
+      else if (shape === "line") {
         ctx.moveTo(x, y);
-      } else if (tool === 'shape') {
-        drawShape(startX, startY, x, y, shapeMode);
+        ctx.lineTo(x + 100, y);
+        ctx.strokeStyle = brushColor;
+        ctx.lineWidth = brushSize;
+        ctx.stroke();
+        return;
+      } else if (shape === "triangle") {
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + 50, y + 80);
+        ctx.lineTo(x - 50, y + 80);
+        ctx.closePath();
       }
+      ctx.fill();
     }
 
-    function stopDraw() {
-      drawing = false;
-      ctx.beginPath();
+    function enableFreeDraw() {
+      isEraser = false;
     }
 
-    function drawStamp(x, y) {
-      ctx.font = "24px serif";
-      ctx.fillText("✨", x, y);
-    }
-
-    function drawShape(x1, y1, x2, y2, type) {
-      ctx.beginPath();
-      ctx.strokeStyle = document.getElementById('colorPicker').value;
-      switch(type) {
-        case 'circle':
-          let radius = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-          ctx.arc(x1, y1, radius, 0, 2 * Math.PI);
-          break;
-        case 'square':
-          ctx.rect(x1, y1, x2 - x1, y2 - y1);
-          break;
-        case 'line':
-          ctx.moveTo(x1, y1);
-          ctx.lineTo(x2, y2);
-          break;
-        case 'triangle':
-          ctx.moveTo(x1, y1);
-          ctx.lineTo(x2, y2);
-          ctx.lineTo(x1 - (x2 - x1), y2);
-          ctx.closePath();
-          break;
-      }
-      ctx.stroke();
+    function toggleEraser() {
+      isEraser = !isEraser;
     }
 
     function clearCanvas() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    function addName() {
-      const name = document.getElementById("nameTag").value;
-      ctx.font = "20px Comic Sans MS";
-      ctx.fillStyle = "#ff1493";
-      ctx.fillText(name, 20, canvas.height - 20);
+    function fillCanvas() {
+      ctx.fillStyle = brushColor;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-    function downloadImage() {
-      const link = document.createElement('a');
-      link.download = 'drawing.png';
-      link.href = canvas.toDataURL();
+    function addName() {
+      const name = document.getElementById("nameInput").value;
+      ctx.fillStyle = brushColor;
+      ctx.font = "24px Comic Sans MS";
+      ctx.fillText(name, 20, 40);
+    }
+
+    function stampEmoji(emoji) {
+      ctx.font = "40px serif";
+      ctx.fillText(emoji, 200, 100);
+    }
+
+    function loadPreset() {
+      const preset = document.getElementById("presetSelect").value;
+      clearCanvas();
+      if (preset === "rainbow") {
+        const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+        gradient.addColorStop(0, "red");
+        gradient.addColorStop(0.2, "orange");
+        gradient.addColorStop(0.4, "yellow");
+        gradient.addColorStop(0.6, "green");
+        gradient.addColorStop(0.8, "blue");
+        gradient.addColorStop(1, "purple");
+        ctx.fillStyle = gradient;
+        ctx.fillRect(50, 100, 600, 100);
+      } else if (preset === "kitty") {
+        ctx.font = "100px serif";
+        ctx.fillText("😺", 280, 250);
+      } else if (preset === "house") {
+        drawShape("square");
+        ctx.beginPath();
+        ctx.moveTo(150, 150);
+        ctx.lineTo(230, 80);
+        ctx.lineTo(310, 150);
+        ctx.closePath();
+        ctx.fillStyle = "brown";
+        ctx.fill();
+      }
+    }
+
+    function changeTheme(theme) {
+      if (theme === "pink") {
+        document.body.style.background = "linear-gradient(to bottom right, #ffe4f1, #ffc1e3)";
+      } else if (theme === "sky") {
+        document.body.style.background = "linear-gradient(to bottom right, #e0f7ff, #a8dfff)";
+      } else if (theme === "mint") {
+        document.body.style.background = "linear-gradient(to bottom right, #d1fff2, #a0ffd6)";
+      }
+    }
+
+    function saveImage(type) {
+      let link = document.createElement("a");
+      link.download = `drawing.${type}`;
+      link.href = canvas.toDataURL(`image/${type === "jpg" ? "jpeg" : type}`);
       link.click();
     }
-
-    function loadPreset(src) {
-      const img = new Image();
-      img.src = src;
-      img.onload = () => {
-        ctx.globalAlpha = 0.3;
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        ctx.globalAlpha = 1.0;
-      }
-    }
-
-    function fillColor(x, y) {
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const targetColor = getColorAtPixel(imageData, x, y);
-      const fillColor = hexToRgb(document.getElementById("colorPicker").value);
-      floodFill(imageData, x, y, targetColor, fillColor);
-      ctx.putImageData(imageData, 0, 0);
-    }
-
-    function getColorAtPixel(imageData, x, y) {
-      const index = (y * imageData.width + x) * 4;
-      return [
-        imageData.data[index],
-        imageData.data[index + 1],
-        imageData.data[index + 2],
-        imageData.data[index + 3]
-      ];
-    }
-
-    function hexToRgb(hex) {
-      const bigint = parseInt(hex.slice(1), 16);
-      return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255, 255];
-    }
-
-    function floodFill(imageData, x, y, targetColor, fillColor) {
-      const stack = [[x, y]];
-      const w = imageData.width;
-      const h = imageData.height;
-
-      while (stack.length) {
-        const [cx, cy] = stack.pop();
-        const index = (cy * w + cx) * 4;
-        if (colorsMatch(index, imageData.data, targetColor)) {
-          for (let i = 0; i < 4; i++) {
-            imageData.data[index + i] = fillColor[i];
-          }
-          if (cx > 0) stack.push([cx - 1, cy]);
-          if (cx < w - 1) stack.push([cx + 1, cy]);
-          if (cy > 0) stack.push([cx, cy - 1]);
-          if (cy < h - 1) stack.push([cx, cy + 1]);
-        }
-      }
-    }
-
-    function colorsMatch(i, data, color) {
-      return data[i] === color[0] &&
-             data[i + 1] === color[1] &&
-             data[i + 2] === color[2] &&
-             data[i + 3] === color[3];
-    }
-
-    // Hover Voice
-    const kitty = document.getElementById('kitty');
-    const hoverSound = document.getElementById('hoverSound');
-    kitty.addEventListener('mouseenter', () => {
-      hoverSound.currentTime = 0;
-      hoverSound.play();
-    });
   </script>
 </body>
 </html>
