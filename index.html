@@ -68,7 +68,7 @@
 
     #canvas {
       border: 4px dotted #fff;
-      background: #ff66b2;
+      background: white; /* Set canvas background to white */
       margin-top: 20px;
       border-radius: 12px;
       cursor: crosshair;
@@ -254,10 +254,10 @@
         <button onclick="printCanvas()">🖨️ Print</button>
         <h3>Background:</h3>
         <select onchange="changeTheme(this.value)">
+          <option value="white">White</option>
           <option value="pink">Pink</option>
           <option value="sky">Sky Blue</option>
           <option value="mint">Mint Green</option>
-          <option value="unicorn">Unicorn</option>
         </select>
       </div>
 
@@ -281,9 +281,9 @@
   <div id="games-tab" class="content-area">
     <div class="section" style="max-width: 600px; margin: 0 auto;">
       <h2>🎮 Fun Games 🎮</h2>
-      <button onclick="startMemoryGame()" style="font-size: 20px; padding: 15px;">🧠 Memory Match Game</button>
-      <button onclick="startGuessingGame()" style="font-size: 20px; padding: 15px;">🎨 Color Guessing Game</button>
-      <button onclick="startDrawingGame()" style="font-size: 20px; padding: 15px;">✏️ Drawing Challenge</button>
+      <button onclick="startMemoryGame()">🧠 Memory Match Game</button>
+      <button onclick="startGuessingGame()">🎨 Color Guessing Game</button>
+      <button onclick="startDrawingGame()">✏️ Drawing Challenge</button>
     </div>
   </div>
 
@@ -338,7 +338,7 @@
     </div>
   </div>
 
-  <footer>Made with ❤️ by Nakshu | © 2023 DrawHelloKitty</footer>
+  <footer>Made with ❤️ analizzare | © 2023 DrawHelloKitty</footer>
 
   <script>
     // Canvas setup
@@ -355,7 +355,6 @@
     let currentBrush = "crayon";
     let drawingHistory = [];
     let historyIndex = -1;
-    let currentTool = "brush";
     let connectDotsMode = false;
     let dotPoints = [];
     let coloringBookMode = false;
@@ -372,7 +371,7 @@
     let targetColor = "";
     let drawingChallengeWord = "";
     let drawingChallengeTimer = null;
-    let timeLeft = 60;
+    let timeLeft = 30;
 
     // Initialize
     document.getElementById("colorPicker").value = brushColor;
@@ -402,6 +401,7 @@
 
     // Tab switching
     function switchTab(tab) {
+      console.log(`Switching to tab: ${tab}`);
       const tabs = document.querySelectorAll(".tab");
       const contents = document.querySelectorAll(".content-area");
       tabs.forEach(t => t.classList.remove("active"));
@@ -416,17 +416,18 @@
 
     // Drawing functions
     function startDrawing(e) {
+      console.log("Starting to draw");
       if (coloringBookMode || connectDotsMode) {
         handleSpecialMode(e);
         return;
       }
-      
       drawing = true;
       saveDrawingState();
       draw(e);
     }
 
     function stopDrawing() {
+      console.log("Stopping drawing");
       drawing = false;
       ctx.beginPath();
       lastPoint = null;
@@ -513,7 +514,6 @@
         const angle = Math.random() * Math.PI * 2;
         const sprayX = x + Math.cos(angle) * radius;
         const sprayY = y + Math.sin(angle) * radius;
-        
         ctx.beginPath();
         ctx.arc(sprayX, sprayY, 1, 0, Math.PI * 2);
         ctx.fill();
@@ -542,6 +542,7 @@
 
     // Shape drawing functions
     function drawShape(shape) {
+      console.log(`Drawing shape: ${shape}`);
       saveDrawingState();
       ctx.fillStyle = brushColor;
       ctx.strokeStyle = brushColor;
@@ -599,7 +600,6 @@
         y = cy + Math.sin(rot) * outerRadius;
         ctx.lineTo(x, y);
         rot += step;
-
         x = cx + Math.cos(rot) * innerRadius;
         y = cy + Math.sin(rot) * innerRadius;
         ctx.lineTo(x, y);
@@ -622,11 +622,13 @@
 
     // Tool functions
     function toggleEraser() {
+      console.log(`Toggling eraser: ${!isEraser}`);
       isEraser = !isEraser;
       document.getElementById("brushType").value = isEraser ? "crayon" : currentBrush;
     }
 
     function clearCanvas() {
+      console.log("Clearing canvas");
       saveDrawingState();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       if (coloringBookMode && coloringBookImage) {
@@ -638,6 +640,7 @@
     }
 
     function fillCanvas() {
+      console.log("Filling canvas");
       saveDrawingState();
       ctx.fillStyle = brushColor;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -650,16 +653,17 @@
     }
 
     function addName() {
+      console.log("Adding name");
       saveDrawingState();
       const name = document.getElementById("nameInput").value;
       if (!name) return;
-      
       ctx.fillStyle = brushColor;
       ctx.font = "24px Comic Sans MS";
       ctx.fillText(name, 20, 40);
     }
 
     function stampEmoji(emoji) {
+      console.log(`Stamping emoji: ${emoji}`);
       saveDrawingState();
       ctx.font = `40px serif`;
       ctx.fillStyle = brushColor;
@@ -669,11 +673,11 @@
     }
 
     function showStickers() {
+      console.log("Showing stickers");
       const palette = document.getElementById("stickerPalette");
       palette.style.display = "block";
-      palette.style.left = (Math.random() * (window.innerWidth - 200)) + "px";
-      palette.style.top = (Math.random() * (window.innerHeight - 200)) + "px";
-      
+      palette.style.left = "50px";
+      palette.style.top = "50px";
       setTimeout(() => {
         document.addEventListener("click", closeStickers);
       }, 10);
@@ -681,6 +685,7 @@
 
     function closeStickers(e) {
       if (!document.getElementById("stickerPalette").contains(e.target)) {
+        console.log("Closing stickers");
         document.getElementById("stickerPalette").style.display = "none";
         document.removeEventListener("click", closeStickers);
       }
@@ -691,11 +696,9 @@
       if (historyIndex < drawingHistory.length - 1) {
         drawingHistory = drawingHistory.slice(0, historyIndex + 1);
       }
-      
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       drawingHistory.push(imageData);
       historyIndex = drawingHistory.length - 1;
-      
       if (drawingHistory.length > 20) {
         drawingHistory.shift();
         historyIndex--;
@@ -703,8 +706,8 @@
     }
 
     function undo() {
+      console.log("Undoing");
       if (historyIndex <= 0) return;
-      
       historyIndex--;
       ctx.putImageData(drawingHistory[historyIndex], 0, 0);
       if (coloringBookMode && coloringBookImage) {
@@ -716,8 +719,8 @@
     }
 
     function redo() {
+      console.log("Redoing");
       if (historyIndex >= drawingHistory.length - 1) return;
-      
       historyIndex++;
       ctx.putImageData(drawingHistory[historyIndex], 0, 0);
       if (coloringBookMode && coloringBookImage) {
@@ -730,10 +733,10 @@
 
     // Preset functions
     function loadPreset() {
+      console.log("Loading preset");
       saveDrawingState();
       const preset = document.getElementById("presetSelect").value;
       clearCanvas();
-      
       switch(preset) {
         case "rainbow":
           drawRainbow();
@@ -754,9 +757,7 @@
       const centerX = canvas.width / 2;
       const centerY = canvas.height;
       const radius = Math.min(canvas.width, canvas.height) * 0.8;
-      
       const colors = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"];
-      
       for (let i = 0; i < colors.length; i++) {
         ctx.beginPath();
         ctx.arc(centerX, centerY, radius - i * 20, Math.PI, 0, false);
@@ -767,99 +768,39 @@
     }
 
     function drawHelloKitty() {
-      // Head
       ctx.fillStyle = "white";
       ctx.beginPath();
       ctx.arc(canvas.width/2, canvas.height/2 - 30, 100, 0, Math.PI * 2);
       ctx.fill();
-      
-      // Ears
       ctx.beginPath();
       ctx.moveTo(canvas.width/2 - 50, canvas.height/2 - 80);
       ctx.lineTo(canvas.width/2 - 90, canvas.height/2 - 120);
       ctx.lineTo(canvas.width/2 - 40, canvas.height/2 - 110);
       ctx.fill();
-      
       ctx.beginPath();
       ctx.moveTo(canvas.width/2 + 50, canvas.height/2 - 80);
       ctx.lineTo(canvas.width/2 + 90, canvas.height/2 - 120);
       ctx.lineTo(canvas.width/2 + 40, canvas.height/2 - 110);
       ctx.fill();
-      
-      // Bow
       ctx.fillStyle = "#ff66b2";
       ctx.beginPath();
       ctx.arc(canvas.width/2, canvas.height/2 - 90, 20, 0, Math.PI * 2);
       ctx.fill();
-      
-      ctx.beginPath();
-      ctx.moveTo(canvas.width/2 - 20, canvas.height/2 - 90);
-      ctx.quadraticCurveTo(canvas.width/2 - 40, canvas.height/2 - 70, canvas.width/2 - 60, canvas.height/2 - 90);
-      ctx.quadraticCurveTo(canvas.width/2 - 40, canvas.height/2 - 110, canvas.width/2 - 20, canvas.height/2 - 90);
-      ctx.fill();
-      
-      ctx.beginPath();
-      ctx.moveTo(canvas.width/2 + 20, canvas.height/2 - 90);
-      ctx.quadraticCurveTo(canvas.width/2 + 40, canvas.height/2 - 70, canvas.width/2 + 60, canvas.height/2 - 90);
-      ctx.quadraticCurveTo(canvas.width/2 + 40, canvas.height/2 - 110, canvas.width/2 + 20, canvas.height/2 - 90);
-      ctx.fill();
-      
-      // Eyes
       ctx.fillStyle = "black";
       ctx.beginPath();
       ctx.arc(canvas.width/2 - 30, canvas.height/2 - 40, 10, 0, Math.PI * 2);
       ctx.fill();
-      
       ctx.beginPath();
       ctx.arc(canvas.width/2 + 30, canvas.height/2 - 40, 10, 0, Math.PI * 2);
       ctx.fill();
-      
-      // Nose
       ctx.beginPath();
       ctx.arc(canvas.width/2, canvas.height/2 - 20, 5, 0, Math.PI * 2);
       ctx.fill();
-      
-      // Whiskers
-      ctx.strokeStyle = "black";
-      ctx.lineWidth = 2;
-      
-      ctx.beginPath();
-      ctx.moveTo(canvas.width/2 + 5, canvas.height/2 - 15);
-      ctx.lineTo(canvas.width/2 + 50, canvas.height/2 - 10);
-      ctx.stroke();
-      
-      ctx.beginPath();
-      ctx.moveTo(canvas.width/2 + 5, canvas.height/2 - 10);
-      ctx.lineTo(canvas.width/2 + 50, canvas.height/2);
-      ctx.stroke();
-      
-      ctx.beginPath();
-      ctx.moveTo(canvas.width/2 + 5, canvas.height/2 - 5);
-      ctx.lineTo(canvas.width/2 + 50, canvas.height/2 + 10);
-      ctx.stroke();
-      
-      ctx.beginPath();
-      ctx.moveTo(canvas.width/2 - 5, canvas.height/2 - 15);
-      ctx.lineTo(canvas.width/2 - 50, canvas.height/2 - 10);
-      ctx.stroke();
-      
-      ctx.beginPath();
-      ctx.moveTo(canvas.width/2 - 5, canvas.height/2 - 10);
-      ctx.lineTo(canvas.width/2 - 50, canvas.height/2);
-      ctx.stroke();
-      
-      ctx.beginPath();
-      ctx.moveTo(canvas.width/2 - 5, canvas.height/2 - 5);
-      ctx.lineTo(canvas.width/2 - 50, canvas.height/2 + 10);
-      ctx.stroke();
     }
 
     function drawHouse() {
-      // Base
       ctx.fillStyle = "#8B4513";
       ctx.fillRect(canvas.width/2 - 100, canvas.height/2 + 50, 200, 150);
-      
-      // Roof
       ctx.fillStyle = "#A52A2A";
       ctx.beginPath();
       ctx.moveTo(canvas.width/2 - 120, canvas.height/2 + 50);
@@ -867,111 +808,72 @@
       ctx.lineTo(canvas.width/2 + 120, canvas.height/2 + 50);
       ctx.closePath();
       ctx.fill();
-      
-      // Door
       ctx.fillStyle = "#654321";
       ctx.fillRect(canvas.width/2 - 30, canvas.height/2 + 100, 60, 100);
-      
-      // Window
       ctx.fillStyle = "#ADD8E6";
       ctx.fillRect(canvas.width/2 - 80, canvas.height/2 + 70, 40, 40);
       ctx.fillRect(canvas.width/2 + 40, canvas.height/2 + 70, 40, 40);
-      
-      // Window frames
-      ctx.strokeStyle = "black";
-      ctx.lineWidth = 2;
-      ctx.strokeRect(canvas.width/2 - 80, canvas.height/2 + 70, 40, 40);
-      ctx.beginPath();
-      ctx.moveTo(canvas.width/2 - 60, canvas.height/2 + 70);
-      ctx.lineTo(canvas.width/2 - 60, canvas.height/2 + 110);
-      ctx.moveTo(canvas.width/2 - 80, canvas.height/2 + 90);
-      ctx.lineTo(canvas.width/2 - 40, canvas.height/2 + 90);
-      ctx.stroke();
-      
-      ctx.strokeRect(canvas.width/2 + 40, canvas.height/2 + 70, 40, 40);
-      ctx.beginPath();
-      ctx.moveTo(canvas.width/2 + 60, canvas.height/2 + 70);
-      ctx.lineTo(canvas.width/2 + 60, canvas.height/2 + 110);
-      ctx.moveTo(canvas.width/2 + 40, canvas.height/2 + 90);
-      ctx.lineTo(canvas.width/2 + 80, canvas.height/2 + 90);
-      ctx.stroke();
     }
 
     function drawSunset() {
-      // Sky gradient
       const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
       gradient.addColorStop(0, "#FF4500");
       gradient.addColorStop(0.5, "#FF8C00");
       gradient.addColorStop(1, "#FFD700");
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      // Sun
       ctx.fillStyle = "#FFD700";
       ctx.beginPath();
       ctx.arc(canvas.width/2, canvas.height + 50, 150, 0, Math.PI, true);
       ctx.fill();
-      
-      // Ocean
       ctx.fillStyle = "#1E90FF";
       ctx.fillRect(0, canvas.height/2 + 100, canvas.width, canvas.height/2 - 100);
-      
-      // Waves
-      ctx.strokeStyle = "#00008B";
-      ctx.lineWidth = 2;
-      for (let i = 0; i < 10; i++) {
-        ctx.beginPath();
-        ctx.moveTo(i * 100, canvas.height/2 + 120 + Math.sin(i) * 10);
-        ctx.quadraticCurveTo(
-          i * 100 + 50, canvas.height/2 + 110 + Math.sin(i + 0.5) * 10,
-          i * 100 + 100, canvas.height/2 + 120 + Math.sin(i + 1) * 10
-        );
-        ctx.stroke();
-      }
     }
 
     // Theme functions
     function changeTheme(theme) {
+      console.log(`Changing theme to: ${theme}`);
       switch(theme) {
+        case "white":
+          canvas.style.backgroundColor = "white";
+          break;
         case "pink":
-          document.body.style.background = "linear-gradient(to bottom right, #ffe4f1, #ffc1e3)";
           canvas.style.backgroundColor = "#ff66b2";
           break;
         case "sky":
-          document.body.style.background = "linear-gradient(to bottom right, #e0f7ff, #a8dfff)";
           canvas.style.backgroundColor = "#66b3ff";
           break;
         case "mint":
-          document.body.style.background = "linear-gradient(to bottom right, #d1fff2, #a0ffd6)";
           canvas.style.backgroundColor = "#66ffb3";
-          break;
-        case "unicorn":
-          document.body.style.background = "linear-gradient(to bottom right, #ffcce6, #ffccf2, #f2ccff, #e6ccff, #ccf2ff, #ccffff, #ccffcc)";
-          canvas.style.backgroundColor = "white";
           break;
       }
     }
 
     // Save/export functions
     function saveImage(type) {
+      console.log(`Saving image as: ${type}`);
       let link = document.createElement("a");
       const fileName = `DrawHelloKitty_${new Date().toISOString().slice(0,10)}.${type}`;
       link.download = fileName;
-
       if (type === "pdf") {
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF();
-        const imgData = canvas.toDataURL("image/png");
-        pdf.addImage(imgData, "PNG", 10, 10, canvas.width / 4, canvas.height / 4);
-        pdf.save(fileName);
+        try {
+          const { jsPDF } = window.jspdf;
+          const pdf = new jsPDF();
+          const imgData = canvas.toDataURL("image/png");
+          pdf.addImage(imgData, "PNG", 10, 10, canvas.width / 4, canvas.height / 4);
+          pdf.save(fileName);
+        } catch (e) {
+          console.error("PDF save error:", e);
+          alert("PDF export failed. Try PNG or JPEG.");
+        }
         return;
-      } else {
-        link.href = canvas.toDataURL(`image/${type}`);
       }
+      link.href = canvas.toDataURL(`image/${type}`);
       link.click();
     }
 
     function printCanvas() {
+      console.log("Printing canvas");
       const dataUrl = canvas.toDataURL("image/png");
       const windowContent = '<!DOCTYPE html><html><head><title>Print Canvas</title></head><body><img src="' + dataUrl + '"></body></html>';
       const printWin = window.open('', '', 'width=800,height=600');
@@ -984,11 +886,11 @@
 
     // Coloring book mode
     function startColoringBook() {
+      console.log("Starting coloring book");
       saveDrawingState();
       coloringBookMode = true;
       connectDotsMode = false;
       clearCanvas();
-      
       coloringBookImage = new Image();
       coloringBookImage.src = createColoringBookImage();
       coloringBookImage.onload = () => {
@@ -1001,41 +903,17 @@
       tempCanvas.width = canvas.width;
       tempCanvas.height = canvas.height;
       const tempCtx = tempCanvas.getContext("2d");
-      
-      // Draw a simple Hello Kitty outline
       tempCtx.strokeStyle = "black";
       tempCtx.lineWidth = 2;
-      
-      // Head
       tempCtx.beginPath();
       tempCtx.arc(canvas.width/2, canvas.height/2 - 30, 100, 0, Math.PI * 2);
       tempCtx.stroke();
-      
-      // Ears
-      tempCtx.beginPath();
-      tempCtx.moveTo(canvas.width/2 - 50, canvas.height/2 - 80);
-      tempCtx.lineTo(canvas.width/2 - 90, canvas.height/2 - 120);
-      tempCtx.lineTo(canvas.width/2 - 40, canvas.height/2 - 110);
-      tempCtx.closePath();
-      tempCtx.stroke();
-      
-      tempCtx.beginPath();
-      tempCtx.moveTo(canvas.width/2 + 50, canvas.height/2 - 80);
-      tempCtx.lineTo(canvas.width/2 + 90, canvas.height/2 - 120);
-      tempCtx.lineTo(canvas.width/2 + 40, canvas.height/2 - 110);
-      tempCtx.closePath();
-      tempCtx.stroke();
-      
-      // Bow
-      tempCtx.beginPath();
-      tempCtx.arc(canvas.width/2, canvas.height/2 - 90, 20, 0, Math.PI * 2);
-      tempCtx.stroke();
-      
       return tempCanvas.toDataURL();
     }
 
     // Connect-the-dots mode
     function startConnectDots() {
+      console.log("Starting connect-the-dots");
       saveDrawingState();
       connectDotsMode = true;
       coloringBookMode = false;
@@ -1046,11 +924,10 @@
 
     function generateDots() {
       const points = [];
-      const numDots = 10;
+      const numDots = 5;
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
-      const radius = 150;
-      
+      const radius = 100;
       for (let i = 0; i < numDots; i++) {
         const angle = (i / numDots) * Math.PI * 2;
         const x = centerX + Math.cos(angle) * radius;
@@ -1075,7 +952,6 @@
       const rect = canvas.getBoundingClientRect();
       const x = (e.clientX || e.touches[0].clientX) - rect.left;
       const y = (e.clientY || e.touches[0].clientY) - rect.top;
-      
       if (connectDotsMode) {
         const clickedDot = dotPoints.find(dot => 
           Math.sqrt((dot.x - x) ** 2 + (dot.y - y) ** 2) < 10
@@ -1100,6 +976,7 @@
 
     // Game functions
     function closeGame() {
+      console.log("Closing game");
       document.getElementById("gameContainer").style.display = "none";
       gameCanvas.onclick = null;
       if (drawingChallengeTimer) {
@@ -1107,16 +984,18 @@
         drawingChallengeTimer = null;
       }
       currentGame = null;
+      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
     }
 
     function startMemoryGame() {
+      console.log("Starting Memory Game");
       currentGame = "memory";
       document.getElementById("gameContainer").style.display = "flex";
       document.getElementById("gameTitle").textContent = "Memory Match Game";
-      document.getElementById("gameInstructions").textContent = "Click to flip cards and find matching pairs!";
+      document.getElementById("gameInstructions").textContent = "Click cards to find matching pairs!";
       gameScore = 0;
       document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
-      memoryCards = ["😺", "😺", "🌸", "🌸", "⭐", "⭐", "🎀", "🎀"].sort(() => Math.random() - 0.5);
+      memoryCards = ["😺", "😺", "🌸", "🌸"].sort(() => Math.random() - 0.5);
       matchedCards = [];
       flippedCards = [];
       renderMemoryGame();
@@ -1128,9 +1007,9 @@
       const cardWidth = 80;
       const cardHeight = 80;
       const gap = 20;
-      for (let i = 0; i < 8; i++) {
-        const x = (i % 4) * (cardWidth + gap) + gap;
-        const y = Math.floor(i / 4) * (cardHeight + gap) + gap;
+      for (let i = 0; i < 4; i++) {
+        const x = (i % 2) * (cardWidth + gap) + gap;
+        const y = Math.floor(i / 2) * (cardHeight + gap) + gap;
         gameCtx.fillStyle = matchedCards.includes(i) || flippedCards.includes(i) ? "#fff" : "#ff66b2";
         gameCtx.fillRect(x, y, cardWidth, cardHeight);
         if (matchedCards.includes(i) || flippedCards.includes(i)) {
@@ -1142,21 +1021,19 @@
     }
 
     function handleMemoryCardClick(e) {
+      console.log("Memory card clicked");
       const rect = gameCanvas.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       const cardWidth = 80;
       const cardHeight = 80;
       const gap = 20;
-      
       const col = Math.floor((x - gap) / (cardWidth + gap));
       const row = Math.floor((y - gap) / (cardHeight + gap));
-      const index = row * 4 + col;
-      
-      if (col >= 0 && col < 4 && row >= 0 && row < 2 && !matchedCards.includes(index) && !flippedCards.includes(index)) {
+      const index = row * 2 + col;
+      if (col >= 0 && col < 2 && row >= 0 && row < 2 && !matchedCards.includes(index) && !flippedCards.includes(index)) {
         flippedCards.push(index);
         renderMemoryGame();
-        
         if (flippedCards.length === 2) {
           const [first, second] = flippedCards;
           if (memoryCards[first] === memoryCards[second]) {
@@ -1165,7 +1042,7 @@
             document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
             flippedCards = [];
             if (matchedCards.length === memoryCards.length) {
-              setTimeout(() => alert("You won the Memory Match Game!"), 500);
+              setTimeout(() => alert("You won!"), 500);
             }
           } else {
             setTimeout(() => {
@@ -1178,10 +1055,11 @@
     }
 
     function startGuessingGame() {
+      console.log("Starting Color Guessing Game");
       currentGame = "colorGuessing";
       document.getElementById("gameContainer").style.display = "flex";
       document.getElementById("gameTitle").textContent = "Color Guessing Game";
-      document.getElementById("gameInstructions").textContent = "Click the color that matches the target color!";
+      document.getElementById("gameInstructions").textContent = "Click the matching color!";
       gameScore = 0;
       document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
       generateColorRound();
@@ -1192,10 +1070,9 @@
       colorOptions = [
         `#${Math.floor(Math.random()*16777215).toString(16)}`,
         `#${Math.floor(Math.random()*16777215).toString(16)}`,
-        `#${Math.floor(Math.random()*16777215).toString(16)}`,
         `#${Math.floor(Math.random()*16777215).toString(16)}`
       ];
-      targetColor = colorOptions[Math.floor(Math.random() * 4)];
+      targetColor = colorOptions[Math.floor(Math.random() * 3)];
       renderColorGuessingGame();
     }
 
@@ -1203,21 +1080,20 @@
       gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
       gameCtx.fillStyle = targetColor;
       gameCtx.fillRect(50, 50, 300, 100);
-      
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 3; i++) {
         gameCtx.fillStyle = colorOptions[i];
-        gameCtx.fillRect(50 + i * 80, 200, 60, 60);
+        gameCtx.fillRect(50 + i * 100, 200, 80, 80);
       }
     }
 
     function handleColorGuess(e) {
+      console.log("Color guess clicked");
       const rect = gameCanvas.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-      
-      if (y >= 200 && y <= 260) {
-        const index = Math.floor((x - 50) / 80);
-        if (index >= 0 && index < 4) {
+      if (y >= 200 && y <= 280) {
+        const index = Math.floor((x - 50) / 100);
+        if (index >= 0 && index < 3) {
           if (colorOptions[index] === targetColor) {
             gameScore += 5;
             document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
@@ -1231,22 +1107,23 @@
     }
 
     function startDrawingGame() {
+      console.log("Starting Drawing Challenge");
       currentGame = "drawingChallenge";
       document.getElementById("gameContainer").style.display = "flex";
       document.getElementById("gameTitle").textContent = "Drawing Challenge";
-      const words = ["cat", "flower", "house", "star", "rainbow"];
+      const words = ["cat", "flower", "house"];
       drawingChallengeWord = words[Math.floor(Math.random() * words.length)];
-      document.getElementById("gameInstructions").textContent = `Draw a ${drawingChallengeWord} in 60 seconds! Click Close to submit.`;
+      document.getElementById("gameInstructions").textContent = `Draw a ${drawingChallengeWord} in 30 seconds!`;
       gameScore = 0;
       document.getElementById("gameScore").textContent = `Time Left: ${timeLeft}s`;
       gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-      timeLeft = 60;
+      timeLeft = 30;
       drawingChallengeTimer = setInterval(() => {
         timeLeft--;
         document.getElementById("gameScore").textContent = `Time Left: ${timeLeft}s`;
         if (timeLeft <= 0) {
           clearInterval(drawingChallengeTimer);
-          alert("Time's up! Your drawing was great!");
+          alert("Time's up!");
           closeGame();
         }
       }, 1000);
@@ -1259,11 +1136,13 @@
     let gameLastPoint = null;
 
     function startGameDrawing(e) {
+      console.log("Starting game drawing");
       gameDrawing = true;
       drawInGame(e);
     }
 
     function stopGameDrawing() {
+      console.log("Stopping game drawing");
       gameDrawing = false;
       gameCtx.beginPath();
       gameLastPoint = null;
@@ -1271,16 +1150,13 @@
 
     function drawInGame(e) {
       if (!gameDrawing) return;
-      
       const rect = gameCanvas.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-      
       gameCtx.strokeStyle = brushColor;
       gameCtx.lineWidth = brushSize;
       gameCtx.lineJoin = "round";
       gameCtx.lineCap = "round";
-      
       if (gameLastPoint) {
         gameCtx.beginPath();
         gameCtx.moveTo(gameLastPoint.x, gameLastPoint.y);
@@ -1292,11 +1168,11 @@
 
     // Tutorial functions
     function showStepByStep(type) {
+      console.log(`Starting tutorial: ${type}`);
       document.getElementById("gameContainer").style.display = "flex";
       document.getElementById("gameTitle").textContent = `Learn to Draw a ${type.charAt(0).toUpperCase() + type.slice(1)}`;
-      document.getElementById("gameInstructions").textContent = "Follow the steps to draw!";
+      document.getElementById("gameInstructions").textContent = "Click to see the next step!";
       document.getElementById("gameScore").textContent = "";
-      
       const steps = {
         cat: [
           () => {
@@ -1304,7 +1180,7 @@
             gameCtx.beginPath();
             gameCtx.arc(200, 200, 80, 0, Math.PI * 2);
             gameCtx.stroke();
-            gameCtx.fillText("Step 1: Draw a circle for the head", 50, 350);
+            gameCtx.fillText("Step 1: Draw a circle", 50, 350);
           },
           () => {
             gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
@@ -1323,38 +1199,7 @@
             gameCtx.lineTo(220, 100);
             gameCtx.closePath();
             gameCtx.stroke();
-            gameCtx.fillText("Step 2: Add two triangle ears", 50, 350);
-          },
-          () => {
-            gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-            gameCtx.beginPath();
-            gameCtx.arc(200, 200, 80, 0, Math.PI * 2);
-            gameCtx.stroke();
-            gameCtx.beginPath();
-            gameCtx.moveTo(160, 120);
-            gameCtx.lineTo(140, 80);
-            gameCtx.lineTo(180, 100);
-            gameCtx.closePath();
-            gameCtx.stroke();
-            gameCtx.beginPath();
-            gameCtx.moveTo(240, 120);
-            gameCtx.lineTo(260, 80);
-            gameCtx.lineTo(220, 100);
-            gameCtx.closePath();
-            gameCtx.stroke();
-            gameCtx.beginPath();
-            gameCtx.arc(180, 180, 5, 0, Math.PI * 2);
-            gameCtx.fill();
-            gameCtx.beginPath();
-            gameCtx.arc(220, 180, 5, 0, Math.PI * 2);
-            gameCtx.fill();
-            gameCtx.beginPath();
-            gameCtx.moveTo(200, 200);
-            gameCtx.lineTo(190, 210);
-            gameCtx.lineTo(210, 210);
-            gameCtx.closePath();
-            gameCtx.fill();
-            gameCtx.fillText("Step 3: Add eyes and nose", 50, 350);
+            gameCtx.fillText("Step 2: Add ears", 50, 350);
           },
           () => {
             gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
@@ -1379,67 +1224,7 @@
             gameCtx.beginPath();
             gameCtx.arc(220, 180, 5, 0, Math.PI * 2);
             gameCtx.fill();
-            gameCtx.beginPath();
-            gameCtx.moveTo(200, 200);
-            gameCtx.lineTo(190, 210);
-            gameCtx.lineTo(210, 210);
-            gameCtx.closePath();
-            gameCtx.fill();
-            gameCtx.beginPath();
-            gameCtx.moveTo(160, 200);
-            gameCtx.lineTo(140, 200);
-            gameCtx.moveTo(160, 210);
-            gameCtx.lineTo(140, 210);
-            gameCtx.moveTo(240, 200);
-            gameCtx.lineTo(260, 200);
-            gameCtx.moveTo(240, 210);
-            gameCtx.lineTo(260, 210);
-            gameCtx.stroke();
-            gameCtx.fillText("Step 4: Add whiskers", 50, 350);
-          },
-          () => {
-            gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-            gameCtx.beginPath();
-            gameCtx.arc(200, 200, 80, 0, Math.PI * 2);
-            gameCtx.stroke();
-            gameCtx.beginPath();
-            gameCtx.moveTo(160, 120);
-            gameCtx.lineTo(140, 80);
-            gameCtx.lineTo(180, 100);
-            gameCtx.closePath();
-            gameCtx.stroke();
-            gameCtx.beginPath();
-            gameCtx.moveTo(240, 120);
-            gameCtx.lineTo(260, 80);
-            gameCtx.lineTo(220, 100);
-            gameCtx.closePath();
-            gameCtx.stroke();
-            gameCtx.beginPath();
-            gameCtx.arc(180, 180, 5, 0, Math.PI * 2);
-            gameCtx.fill();
-            gameCtx.beginPath();
-            gameCtx.arc(220, 180, 5, 0, Math.PI * 2);
-            gameCtx.fill();
-            gameCtx.beginPath();
-            gameCtx.moveTo(200, 200);
-            gameCtx.lineTo(190, 210);
-            gameCtx.lineTo(210, 210);
-            gameCtx.closePath();
-            gameCtx.fill();
-            gameCtx.beginPath();
-            gameCtx.moveTo(160, 200);
-            gameCtx.lineTo(140, 200);
-            gameCtx.moveTo(160, 210);
-            gameCtx.lineTo(140, 210);
-            gameCtx.moveTo(240, 200);
-            gameCtx.lineTo(260, 200);
-            gameCtx.moveTo(240, 210);
-            gameCtx.lineTo(260, 210);
-            gameCtx.stroke();
-            gameCtx.beginPath();
-            gameCtx.arc(200, 220, 10, Math.PI, 0);
-            gameCtx.stroke();
-            gameCtx.fillText("Step 5: Add a smiling mouth", 50, 350);
+            gameCtx.fillText("Step 3: Add eyes", 50, 350);
           }
         ],
         flower: [
@@ -1448,45 +1233,28 @@
             gameCtx.beginPath();
             gameCtx.arc(200, 200, 20, 0, Math.PI * 2);
             gameCtx.stroke();
-            gameCtx.fillText("Step 1: Draw a small circle", 50, 350);
+            gameCtx.fillText("Step 1: Draw a circle", 50, 350);
           },
           () => {
             gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
             gameCtx.beginPath();
             gameCtx.arc(200, 200, 20, 0, Math.PI * 2);
             gameCtx.stroke();
-            for (let i = 0; i < 8; i++) {
-              const angle = (i / 8) * Math.PI * 2;
+            for (let i = 0; i < 4; i++) {
+              const angle = (i / 4) * Math.PI * 2;
               gameCtx.beginPath();
               gameCtx.ellipse(200 + Math.cos(angle) * 40, 200 + Math.sin(angle) * 40, 10, 20, angle, 0, Math.PI * 2);
               gameCtx.stroke();
             }
-            gameCtx.fillText("Step 2: Add petals around it", 50, 350);
+            gameCtx.fillText("Step 2: Add petals", 50, 350);
           },
           () => {
             gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
             gameCtx.beginPath();
             gameCtx.arc(200, 200, 20, 0, Math.PI * 2);
             gameCtx.stroke();
-            for (let i = 0; i < 8; i++) {
-              const angle = (i / 8) * Math.PI * 2;
-              gameCtx.beginPath();
-              gameCtx.ellipse(200 + Math.cos(angle) * 40, 200 + Math.sin(angle) * 40, 10, 20, angle, 0, Math.PI * 2);
-              gameCtx.stroke();
-            }
-            gameCtx.beginPath();
-            gameCtx.moveTo(200, 220);
-            gameCtx.lineTo(200, 300);
-            gameCtx.stroke();
-            gameCtx.fillText("Step 3: Draw a stem", 50, 350);
-          },
-          () => {
-            gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-            gameCtx.beginPath();
-            gameCtx.arc(200, 200, 20, 0, Math.PI * 2);
-            gameCtx.stroke();
-            for (let i = 0; i < 8; i++) {
-              const angle = (i / 8) * Math.PI * 2;
+            for (let i = 0; i < 4; i++) {
+              const angle = (i / 4) * Math.PI * 2;
               gameCtx.beginPath();
               gameCtx.ellipse(200 + Math.cos(angle) * 40, 200 + Math.sin(angle) * 40, 10, 20, angle, 0, Math.PI * 2);
               gameCtx.stroke();
@@ -1495,21 +1263,14 @@
             gameCtx.moveTo(200, 220);
             gameCtx.lineTo(200, 300);
             gameCtx.stroke();
-            gameCtx.beginPath();
-            gameCtx.ellipse(180, 260, 10, 20, Math.PI / 4, 0, Math.PI * 2);
-            gameCtx.stroke();
-            gameCtx.beginPath();
-            gameCtx.ellipse(220, 260, 10, 20, -Math.PI / 4, 0, Math.PI * 2);
-            gameCtx.stroke();
-            gameCtx.fillText("Step 4: Add leaves", 50, 350);
+            gameCtx.fillText("Step 3: Add stem", 50, 350);
           }
         ]
       };
-
       let currentStep = 0;
       steps[type][currentStep]();
-      
       gameCanvas.onclick = () => {
+        console.log(`Advancing to step ${currentStep + 1}`);
         currentStep = (currentStep + 1) % steps[type].length;
         steps[type][currentStep]();
       };
