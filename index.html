@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>DrawHelloKitty</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body {
       font-family: 'Comic Sans MS', cursive, sans-serif;
@@ -249,6 +250,7 @@
         <h3>Save & Share:</h3>
         <button onclick="saveImage('png')">💾 Save PNG</button>
         <button onclick="saveImage('jpeg')">📷 Save JPEG</button>
+        <button onclick="saveImage('pdf')">📄 Save PDF</button>
         <button onclick="printCanvas()">🖨️ Print</button>
         <h3>Background:</h3>
         <select onchange="changeTheme(this.value)">
@@ -358,6 +360,7 @@
     let dotPoints = [];
     let coloringBookMode = false;
     let coloringBookImage = null;
+    let lastPoint = null;
 
     // Game state
     let currentGame = null;
@@ -389,6 +392,7 @@
 
     document.getElementById("brushType").onchange = function(e) {
       currentBrush = e.target.value;
+      isEraser = false;
     };
 
     document.getElementById("colorPicker").oninput = function(e) {
@@ -396,9 +400,26 @@
       isEraser = false;
     };
 
+    // Tab switching
+    function switchTab(tab) {
+      const tabs = document.querySelectorAll(".tab");
+      const contents = document.querySelectorAll(".content-area");
+      tabs.forEach(t => t.classList.remove("active"));
+      contents.forEach(c => c.classList.remove("active"));
+      document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add("active");
+      document.getElementById(`${tab}-tab`).classList.add("active");
+      if (tab !== "drawing") {
+        coloringBookMode = false;
+        connectDotsMode = false;
+      }
+    }
+
     // Drawing functions
     function startDrawing(e) {
-      if (coloringBookMode || connectDotsMode) return;
+      if (coloringBookMode || connectDotsMode) {
+        handleSpecialMode(e);
+        return;
+      }
       
       drawing = true;
       saveDrawingState();
@@ -408,6 +429,7 @@
     function stopDrawing() {
       drawing = false;
       ctx.beginPath();
+      lastPoint = null;
     }
 
     function draw(e) {
@@ -450,28 +472,38 @@
     }
 
     function drawCrayon(x, y) {
-      ctx.lineTo(x, y);
-      ctx.stroke();
+      if (lastPoint) {
+        ctx.beginPath();
+        ctx.moveTo(lastPoint.x, lastPoint.y);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+      }
       ctx.beginPath();
       ctx.arc(x, y, brushSize/2, 0, Math.PI*2);
       ctx.fill();
-      ctx.beginPath();
-      ctx.moveTo(x, y);
+      lastPoint = { x, y };
     }
 
     function drawMarker(x, y) {
-      ctx.lineTo(x, y);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(x, y);
+      if (lastPoint) {
+        ctx.beginPath();
+        ctx.moveTo(lastPoint.x, lastPoint.y);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+      }
+      lastPoint = { x, y };
     }
 
     function drawPencil(x, y) {
-      ctx.lineTo(x, y);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(x, y);
       ctx.globalAlpha = 0.7;
+      if (lastPoint) {
+        ctx.beginPath();
+        ctx.moveTo(lastPoint.x, lastPoint.y);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+      }
+      lastPoint = { x, y };
+      ctx.globalAlpha = 1;
     }
 
     function drawSpray(x, y) {
@@ -591,18 +623,30 @@
     // Tool functions
     function toggleEraser() {
       isEraser = !isEraser;
-      document.getElementById("brushType").value = isEraser ? "eraser" : currentBrush;
+      document.getElementById("brushType").value = isEraser ? "crayon" : currentBrush;
     }
 
     function clearCanvas() {
       saveDrawingState();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (coloringBookMode && coloringBookImage) {
+        ctx.drawImage(coloringBookImage, 0, 0, canvas.width, canvas.height);
+      }
+      if (connectDotsMode) {
+        renderDots();
+      }
     }
 
     function fillCanvas() {
       saveDrawingState();
       ctx.fillStyle = brushColor;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+      if (coloringBookMode && coloringBookImage) {
+        ctx.drawImage(coloringBookImage, 0, 0, canvas.width, canvas.height);
+      }
+      if (connectDotsMode) {
+        renderDots();
+      }
     }
 
     function addName() {
@@ -630,7 +674,6 @@
       palette.style.left = (Math.random() * (window.innerWidth - 200)) + "px";
       palette.style.top = (Math.random() * (window.innerHeight - 200)) + "px";
       
-      // Close palette when clicking outside
       setTimeout(() => {
         document.addEventListener("click", closeStickers);
       }, 10);
@@ -645,17 +688,14 @@
 
     // History functions
     function saveDrawingState() {
-      // Remove any states after current index (for redo)
       if (historyIndex < drawingHistory.length - 1) {
         drawingHistory = drawingHistory.slice(0, historyIndex + 1);
       }
       
-      // Save current canvas state
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       drawingHistory.push(imageData);
       historyIndex = drawingHistory.length - 1;
       
-      // Limit history size
       if (drawingHistory.length > 20) {
         drawingHistory.shift();
         historyIndex--;
@@ -667,6 +707,12 @@
       
       historyIndex--;
       ctx.putImageData(drawingHistory[historyIndex], 0, 0);
+      if (coloringBookMode && coloringBookImage) {
+        ctx.drawImage(coloringBookImage, 0, 0, canvas.width, canvas.height);
+      }
+      if (connectDotsMode) {
+        renderDots();
+      }
     }
 
     function redo() {
@@ -674,6 +720,12 @@
       
       historyIndex++;
       ctx.putImageData(drawingHistory[historyIndex], 0, 0);
+      if (coloringBookMode && coloringBookImage) {
+        ctx.drawImage(coloringBookImage, 0, 0, canvas.width, canvas.height);
+      }
+      if (connectDotsMode) {
+        renderDots();
+      }
     }
 
     // Preset functions
@@ -905,16 +957,563 @@
       let link = document.createElement("a");
       const fileName = `DrawHelloKitty_${new Date().toISOString().slice(0,10)}.${type}`;
       link.download = fileName;
+
+      if (type === "pdf") {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF();
+        const imgData = canvas.toDataURL("image/png");
+        pdf.addImage(imgData, "PNG", 10, 10, canvas.width / 4, canvas.height / 4);
+        pdf.save(fileName);
+        return;
+      } else {
+        link.href = canvas.toDataURL(`image/${type}`);
+      }
+      link.click();
+    }
+
+    function printCanvas() {
+      const dataUrl = canvas.toDataURL("image/png");
+      const windowContent = '<!DOCTYPE html><html><head><title>Print Canvas</title></head><body><img src="' + dataUrl + '"></body></html>';
+      const printWin = window.open('', '', 'width=800,height=600');
+      printWin.document.write(windowContent);
+      printWin.document.close();
+      printWin.focus();
+      printWin.print();
+      printWin.close();
+    }
+
+    // Coloring book mode
+    function startColoringBook() {
+      saveDrawingState();
+      coloringBookMode = true;
+      connectDotsMode = false;
+      clearCanvas();
       
-      if (type === "svg") {
-        // Simple SVG export (basic shapes won't be preserved as vectors)
-        const svgData = `
-          <svg xmlns="http://www.w3.org/2000/svg" width="${canvas.width}" height="${canvas.height}">
-            <image href="${canvas.toDataURL("image/png")}" width="${canvas.width}" height="${canvas.height}"/>
-          </svg>
-        `;
-        link.href = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgData);
-      } else if (type === "pdf") {
-        // PDF export would require a library like jsPDF
-        alert("PDF export would require additional libraries. Try PNG or JPEG instead.");
-        return
+      coloringBookImage = new Image();
+      coloringBookImage.src = createColoringBookImage();
+      coloringBookImage.onload = () => {
+        ctx.drawImage(coloringBookImage, 0, 0, canvas.width, canvas.height);
+      };
+    }
+
+    function createColoringBookImage() {
+      const tempCanvas = document.createElement("canvas");
+      tempCanvas.width = canvas.width;
+      tempCanvas.height = canvas.height;
+      const tempCtx = tempCanvas.getContext("2d");
+      
+      // Draw a simple Hello Kitty outline
+      tempCtx.strokeStyle = "black";
+      tempCtx.lineWidth = 2;
+      
+      // Head
+      tempCtx.beginPath();
+      tempCtx.arc(canvas.width/2, canvas.height/2 - 30, 100, 0, Math.PI * 2);
+      tempCtx.stroke();
+      
+      // Ears
+      tempCtx.beginPath();
+      tempCtx.moveTo(canvas.width/2 - 50, canvas.height/2 - 80);
+      tempCtx.lineTo(canvas.width/2 - 90, canvas.height/2 - 120);
+      tempCtx.lineTo(canvas.width/2 - 40, canvas.height/2 - 110);
+      tempCtx.closePath();
+      tempCtx.stroke();
+      
+      tempCtx.beginPath();
+      tempCtx.moveTo(canvas.width/2 + 50, canvas.height/2 - 80);
+      tempCtx.lineTo(canvas.width/2 + 90, canvas.height/2 - 120);
+      tempCtx.lineTo(canvas.width/2 + 40, canvas.height/2 - 110);
+      tempCtx.closePath();
+      tempCtx.stroke();
+      
+      // Bow
+      tempCtx.beginPath();
+      tempCtx.arc(canvas.width/2, canvas.height/2 - 90, 20, 0, Math.PI * 2);
+      tempCtx.stroke();
+      
+      return tempCanvas.toDataURL();
+    }
+
+    // Connect-the-dots mode
+    function startConnectDots() {
+      saveDrawingState();
+      connectDotsMode = true;
+      coloringBookMode = false;
+      clearCanvas();
+      dotPoints = generateDots();
+      renderDots();
+    }
+
+    function generateDots() {
+      const points = [];
+      const numDots = 10;
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const radius = 150;
+      
+      for (let i = 0; i < numDots; i++) {
+        const angle = (i / numDots) * Math.PI * 2;
+        const x = centerX + Math.cos(angle) * radius;
+        const y = centerY + Math.sin(angle) * radius;
+        points.push({ x, y, number: i + 1 });
+      }
+      return points;
+    }
+
+    function renderDots() {
+      ctx.fillStyle = "black";
+      ctx.font = "20px Comic Sans MS";
+      dotPoints.forEach(point => {
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillText(point.number, point.x + 10, point.y + 10);
+      });
+    }
+
+    function handleSpecialMode(e) {
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.clientX || e.touches[0].clientX) - rect.left;
+      const y = (e.clientY || e.touches[0].clientY) - rect.top;
+      
+      if (connectDotsMode) {
+        const clickedDot = dotPoints.find(dot => 
+          Math.sqrt((dot.x - x) ** 2 + (dot.y - y) ** 2) < 10
+        );
+        if (clickedDot && clickedDot.number === dotPoints[0].number) {
+          saveDrawingState();
+          ctx.beginPath();
+          ctx.moveTo(clickedDot.x, clickedDot.y);
+          dotPoints.push(dotPoints.shift());
+          renderDots();
+        } else if (clickedDot && clickedDot.number === dotPoints[0].number + 1) {
+          saveDrawingState();
+          ctx.strokeStyle = brushColor;
+          ctx.lineWidth = brushSize;
+          ctx.lineTo(clickedDot.x, clickedDot.y);
+          ctx.stroke();
+          dotPoints.push(dotPoints.shift());
+          renderDots();
+        }
+      }
+    }
+
+    // Game functions
+    function closeGame() {
+      document.getElementById("gameContainer").style.display = "none";
+      gameCanvas.onclick = null;
+      if (drawingChallengeTimer) {
+        clearInterval(drawingChallengeTimer);
+        drawingChallengeTimer = null;
+      }
+      currentGame = null;
+    }
+
+    function startMemoryGame() {
+      currentGame = "memory";
+      document.getElementById("gameContainer").style.display = "flex";
+      document.getElementById("gameTitle").textContent = "Memory Match Game";
+      document.getElementById("gameInstructions").textContent = "Click to flip cards and find matching pairs!";
+      gameScore = 0;
+      document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
+      memoryCards = ["😺", "😺", "🌸", "🌸", "⭐", "⭐", "🎀", "🎀"].sort(() => Math.random() - 0.5);
+      matchedCards = [];
+      flippedCards = [];
+      renderMemoryGame();
+      gameCanvas.onclick = handleMemoryCardClick;
+    }
+
+    function renderMemoryGame() {
+      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+      const cardWidth = 80;
+      const cardHeight = 80;
+      const gap = 20;
+      for (let i = 0; i < 8; i++) {
+        const x = (i % 4) * (cardWidth + gap) + gap;
+        const y = Math.floor(i / 4) * (cardHeight + gap) + gap;
+        gameCtx.fillStyle = matchedCards.includes(i) || flippedCards.includes(i) ? "#fff" : "#ff66b2";
+        gameCtx.fillRect(x, y, cardWidth, cardHeight);
+        if (matchedCards.includes(i) || flippedCards.includes(i)) {
+          gameCtx.font = "40px serif";
+          gameCtx.fillStyle = "black";
+          gameCtx.fillText(memoryCards[i], x + 20, y + 60);
+        }
+      }
+    }
+
+    function handleMemoryCardClick(e) {
+      const rect = gameCanvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const cardWidth = 80;
+      const cardHeight = 80;
+      const gap = 20;
+      
+      const col = Math.floor((x - gap) / (cardWidth + gap));
+      const row = Math.floor((y - gap) / (cardHeight + gap));
+      const index = row * 4 + col;
+      
+      if (col >= 0 && col < 4 && row >= 0 && row < 2 && !matchedCards.includes(index) && !flippedCards.includes(index)) {
+        flippedCards.push(index);
+        renderMemoryGame();
+        
+        if (flippedCards.length === 2) {
+          const [first, second] = flippedCards;
+          if (memoryCards[first] === memoryCards[second]) {
+            matchedCards.push(first, second);
+            gameScore += 10;
+            document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
+            flippedCards = [];
+            if (matchedCards.length === memoryCards.length) {
+              setTimeout(() => alert("You won the Memory Match Game!"), 500);
+            }
+          } else {
+            setTimeout(() => {
+              flippedCards = [];
+              renderMemoryGame();
+            }, 1000);
+          }
+        }
+      }
+    }
+
+    function startGuessingGame() {
+      currentGame = "colorGuessing";
+      document.getElementById("gameContainer").style.display = "flex";
+      document.getElementById("gameTitle").textContent = "Color Guessing Game";
+      document.getElementById("gameInstructions").textContent = "Click the color that matches the target color!";
+      gameScore = 0;
+      document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
+      generateColorRound();
+      gameCanvas.onclick = handleColorGuess;
+    }
+
+    function generateColorRound() {
+      colorOptions = [
+        `#${Math.floor(Math.random()*16777215).toString(16)}`,
+        `#${Math.floor(Math.random()*16777215).toString(16)}`,
+        `#${Math.floor(Math.random()*16777215).toString(16)}`,
+        `#${Math.floor(Math.random()*16777215).toString(16)}`
+      ];
+      targetColor = colorOptions[Math.floor(Math.random() * 4)];
+      renderColorGuessingGame();
+    }
+
+    function renderColorGuessingGame() {
+      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+      gameCtx.fillStyle = targetColor;
+      gameCtx.fillRect(50, 50, 300, 100);
+      
+      for (let i = 0; i < 4; i++) {
+        gameCtx.fillStyle = colorOptions[i];
+        gameCtx.fillRect(50 + i * 80, 200, 60, 60);
+      }
+    }
+
+    function handleColorGuess(e) {
+      const rect = gameCanvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      if (y >= 200 && y <= 260) {
+        const index = Math.floor((x - 50) / 80);
+        if (index >= 0 && index < 4) {
+          if (colorOptions[index] === targetColor) {
+            gameScore += 5;
+            document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
+            generateColorRound();
+          } else {
+            gameScore = Math.max(0, gameScore - 2);
+            document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
+          }
+        }
+      }
+    }
+
+    function startDrawingGame() {
+      currentGame = "drawingChallenge";
+      document.getElementById("gameContainer").style.display = "flex";
+      document.getElementById("gameTitle").textContent = "Drawing Challenge";
+      const words = ["cat", "flower", "house", "star", "rainbow"];
+      drawingChallengeWord = words[Math.floor(Math.random() * words.length)];
+      document.getElementById("gameInstructions").textContent = `Draw a ${drawingChallengeWord} in 60 seconds! Click Close to submit.`;
+      gameScore = 0;
+      document.getElementById("gameScore").textContent = `Time Left: ${timeLeft}s`;
+      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+      timeLeft = 60;
+      drawingChallengeTimer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("gameScore").textContent = `Time Left: ${timeLeft}s`;
+        if (timeLeft <= 0) {
+          clearInterval(drawingChallengeTimer);
+          alert("Time's up! Your drawing was great!");
+          closeGame();
+        }
+      }, 1000);
+      gameCanvas.onmousedown = startGameDrawing;
+      gameCanvas.onmousemove = drawInGame;
+      gameCanvas.onmouseup = stopGameDrawing;
+    }
+
+    let gameDrawing = false;
+    let gameLastPoint = null;
+
+    function startGameDrawing(e) {
+      gameDrawing = true;
+      drawInGame(e);
+    }
+
+    function stopGameDrawing() {
+      gameDrawing = false;
+      gameCtx.beginPath();
+      gameLastPoint = null;
+    }
+
+    function drawInGame(e) {
+      if (!gameDrawing) return;
+      
+      const rect = gameCanvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      gameCtx.strokeStyle = brushColor;
+      gameCtx.lineWidth = brushSize;
+      gameCtx.lineJoin = "round";
+      gameCtx.lineCap = "round";
+      
+      if (gameLastPoint) {
+        gameCtx.beginPath();
+        gameCtx.moveTo(gameLastPoint.x, gameLastPoint.y);
+        gameCtx.lineTo(x, y);
+        gameCtx.stroke();
+      }
+      gameLastPoint = { x, y };
+    }
+
+    // Tutorial functions
+    function showStepByStep(type) {
+      document.getElementById("gameContainer").style.display = "flex";
+      document.getElementById("gameTitle").textContent = `Learn to Draw a ${type.charAt(0).toUpperCase() + type.slice(1)}`;
+      document.getElementById("gameInstructions").textContent = "Follow the steps to draw!";
+      document.getElementById("gameScore").textContent = "";
+      
+      const steps = {
+        cat: [
+          () => {
+            gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+            gameCtx.beginPath();
+            gameCtx.arc(200, 200, 80, 0, Math.PI * 2);
+            gameCtx.stroke();
+            gameCtx.fillText("Step 1: Draw a circle for the head", 50, 350);
+          },
+          () => {
+            gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+            gameCtx.beginPath();
+            gameCtx.arc(200, 200, 80, 0, Math.PI * 2);
+            gameCtx.stroke();
+            gameCtx.beginPath();
+            gameCtx.moveTo(160, 120);
+            gameCtx.lineTo(140, 80);
+            gameCtx.lineTo(180, 100);
+            gameCtx.closePath();
+            gameCtx.stroke();
+            gameCtx.beginPath();
+            gameCtx.moveTo(240, 120);
+            gameCtx.lineTo(260, 80);
+            gameCtx.lineTo(220, 100);
+            gameCtx.closePath();
+            gameCtx.stroke();
+            gameCtx.fillText("Step 2: Add two triangle ears", 50, 350);
+          },
+          () => {
+            gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+            gameCtx.beginPath();
+            gameCtx.arc(200, 200, 80, 0, Math.PI * 2);
+            gameCtx.stroke();
+            gameCtx.beginPath();
+            gameCtx.moveTo(160, 120);
+            gameCtx.lineTo(140, 80);
+            gameCtx.lineTo(180, 100);
+            gameCtx.closePath();
+            gameCtx.stroke();
+            gameCtx.beginPath();
+            gameCtx.moveTo(240, 120);
+            gameCtx.lineTo(260, 80);
+            gameCtx.lineTo(220, 100);
+            gameCtx.closePath();
+            gameCtx.stroke();
+            gameCtx.beginPath();
+            gameCtx.arc(180, 180, 5, 0, Math.PI * 2);
+            gameCtx.fill();
+            gameCtx.beginPath();
+            gameCtx.arc(220, 180, 5, 0, Math.PI * 2);
+            gameCtx.fill();
+            gameCtx.beginPath();
+            gameCtx.moveTo(200, 200);
+            gameCtx.lineTo(190, 210);
+            gameCtx.lineTo(210, 210);
+            gameCtx.closePath();
+            gameCtx.fill();
+            gameCtx.fillText("Step 3: Add eyes and nose", 50, 350);
+          },
+          () => {
+            gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+            gameCtx.beginPath();
+            gameCtx.arc(200, 200, 80, 0, Math.PI * 2);
+            gameCtx.stroke();
+            gameCtx.beginPath();
+            gameCtx.moveTo(160, 120);
+            gameCtx.lineTo(140, 80);
+            gameCtx.lineTo(180, 100);
+            gameCtx.closePath();
+            gameCtx.stroke();
+            gameCtx.beginPath();
+            gameCtx.moveTo(240, 120);
+            gameCtx.lineTo(260, 80);
+            gameCtx.lineTo(220, 100);
+            gameCtx.closePath();
+            gameCtx.stroke();
+            gameCtx.beginPath();
+            gameCtx.arc(180, 180, 5, 0, Math.PI * 2);
+            gameCtx.fill();
+            gameCtx.beginPath();
+            gameCtx.arc(220, 180, 5, 0, Math.PI * 2);
+            gameCtx.fill();
+            gameCtx.beginPath();
+            gameCtx.moveTo(200, 200);
+            gameCtx.lineTo(190, 210);
+            gameCtx.lineTo(210, 210);
+            gameCtx.closePath();
+            gameCtx.fill();
+            gameCtx.beginPath();
+            gameCtx.moveTo(160, 200);
+            gameCtx.lineTo(140, 200);
+            gameCtx.moveTo(160, 210);
+            gameCtx.lineTo(140, 210);
+            gameCtx.moveTo(240, 200);
+            gameCtx.lineTo(260, 200);
+            gameCtx.moveTo(240, 210);
+            gameCtx.lineTo(260, 210);
+            gameCtx.stroke();
+            gameCtx.fillText("Step 4: Add whiskers", 50, 350);
+          },
+          () => {
+            gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+            gameCtx.beginPath();
+            gameCtx.arc(200, 200, 80, 0, Math.PI * 2);
+            gameCtx.stroke();
+            gameCtx.beginPath();
+            gameCtx.moveTo(160, 120);
+            gameCtx.lineTo(140, 80);
+            gameCtx.lineTo(180, 100);
+            gameCtx.closePath();
+            gameCtx.stroke();
+            gameCtx.beginPath();
+            gameCtx.moveTo(240, 120);
+            gameCtx.lineTo(260, 80);
+            gameCtx.lineTo(220, 100);
+            gameCtx.closePath();
+            gameCtx.stroke();
+            gameCtx.beginPath();
+            gameCtx.arc(180, 180, 5, 0, Math.PI * 2);
+            gameCtx.fill();
+            gameCtx.beginPath();
+            gameCtx.arc(220, 180, 5, 0, Math.PI * 2);
+            gameCtx.fill();
+            gameCtx.beginPath();
+            gameCtx.moveTo(200, 200);
+            gameCtx.lineTo(190, 210);
+            gameCtx.lineTo(210, 210);
+            gameCtx.closePath();
+            gameCtx.fill();
+            gameCtx.beginPath();
+            gameCtx.moveTo(160, 200);
+            gameCtx.lineTo(140, 200);
+            gameCtx.moveTo(160, 210);
+            gameCtx.lineTo(140, 210);
+            gameCtx.moveTo(240, 200);
+            gameCtx.lineTo(260, 200);
+            gameCtx.moveTo(240, 210);
+            gameCtx.lineTo(260, 210);
+            gameCtx.stroke();
+            gameCtx.beginPath();
+            gameCtx.arc(200, 220, 10, Math.PI, 0);
+            gameCtx.stroke();
+            gameCtx.fillText("Step 5: Add a smiling mouth", 50, 350);
+          }
+        ],
+        flower: [
+          () => {
+            gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+            gameCtx.beginPath();
+            gameCtx.arc(200, 200, 20, 0, Math.PI * 2);
+            gameCtx.stroke();
+            gameCtx.fillText("Step 1: Draw a small circle", 50, 350);
+          },
+          () => {
+            gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+            gameCtx.beginPath();
+            gameCtx.arc(200, 200, 20, 0, Math.PI * 2);
+            gameCtx.stroke();
+            for (let i = 0; i < 8; i++) {
+              const angle = (i / 8) * Math.PI * 2;
+              gameCtx.beginPath();
+              gameCtx.ellipse(200 + Math.cos(angle) * 40, 200 + Math.sin(angle) * 40, 10, 20, angle, 0, Math.PI * 2);
+              gameCtx.stroke();
+            }
+            gameCtx.fillText("Step 2: Add petals around it", 50, 350);
+          },
+          () => {
+            gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+            gameCtx.beginPath();
+            gameCtx.arc(200, 200, 20, 0, Math.PI * 2);
+            gameCtx.stroke();
+            for (let i = 0; i < 8; i++) {
+              const angle = (i / 8) * Math.PI * 2;
+              gameCtx.beginPath();
+              gameCtx.ellipse(200 + Math.cos(angle) * 40, 200 + Math.sin(angle) * 40, 10, 20, angle, 0, Math.PI * 2);
+              gameCtx.stroke();
+            }
+            gameCtx.beginPath();
+            gameCtx.moveTo(200, 220);
+            gameCtx.lineTo(200, 300);
+            gameCtx.stroke();
+            gameCtx.fillText("Step 3: Draw a stem", 50, 350);
+          },
+          () => {
+            gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+            gameCtx.beginPath();
+            gameCtx.arc(200, 200, 20, 0, Math.PI * 2);
+            gameCtx.stroke();
+            for (let i = 0; i < 8; i++) {
+              const angle = (i / 8) * Math.PI * 2;
+              gameCtx.beginPath();
+              gameCtx.ellipse(200 + Math.cos(angle) * 40, 200 + Math.sin(angle) * 40, 10, 20, angle, 0, Math.PI * 2);
+              gameCtx.stroke();
+            }
+            gameCtx.beginPath();
+            gameCtx.moveTo(200, 220);
+            gameCtx.lineTo(200, 300);
+            gameCtx.stroke();
+            gameCtx.beginPath();
+            gameCtx.ellipse(180, 260, 10, 20, Math.PI / 4, 0, Math.PI * 2);
+            gameCtx.stroke();
+            gameCtx.beginPath();
+            gameCtx.ellipse(220, 260, 10, 20, -Math.PI / 4, 0, Math.PI * 2);
+            gameCtx.stroke();
+            gameCtx.fillText("Step 4: Add leaves", 50, 350);
+          }
+        ]
+      };
+
+      let currentStep = 0;
+      steps[type][currentStep]();
+      
+      gameCanvas.onclick = () => {
+        currentStep = (currentStep + 1) % steps[type].length;
+        steps[type][currentStep]();
+      };
+    }
+  </script>
+</body>
+</html>
