@@ -16,7 +16,7 @@
       font-family: 'Comic Sans MS', cursive, sans-serif;
       background: linear-gradient(135deg, #ffccff, #ff99cc);
       text-align: center;
-      padding: 20px;
+      padding: 2rem;
       color: #d63384;
       min-height: 100vh;
       overflow-x: hidden;
@@ -26,14 +26,14 @@
       font-size: 3rem;
       color: #ff3399;
       text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
 
     .tab-container {
       display: flex;
       justify-content: center;
-      gap: 10px;
-      margin-bottom: 1rem;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
     }
 
     .tab {
@@ -65,37 +65,44 @@
 
     .toolbox {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      padding: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
       background: rgba(255, 230, 240, 0.95);
       border-radius: 15px;
       box-shadow: 0 4px 12px rgba(255, 138, 198, 0.5);
     }
 
     .section {
-      padding: 1rem;
+      padding: 1.5rem;
       border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
     }
 
     .section h3 {
       color: #ff3399;
       font-size: 1.5rem;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
     }
 
     button, select, input[type="text"], input[type="color"], input[type="range"] {
       font-family: inherit;
       background: #ff99cc;
       border: none;
-      padding: 0.75rem;
+      padding: 0.75rem 1rem;
       margin: 0.25rem;
       border-radius: 8px;
       box-shadow: 2px 2px 4px rgba(255, 92, 170, 0.5);
       cursor: pointer;
       font-size: 1rem;
       transition: all 0.2s;
+      width: 100%;
+      max-width: 200px;
+      text-align: center;
     }
 
     button:hover, select:hover, input:hover {
@@ -132,7 +139,7 @@
 
     .game-window {
       background: #ffe6f0;
-      padding: 1.5rem;
+      padding: 2rem;
       border-radius: 20px;
       width: 90%;
       max-width: 600px;
@@ -144,24 +151,24 @@
       background: white;
       border: 3px dashed #ff99cc;
       border-radius: 10px;
-      margin: 0.5rem auto;
+      margin: 1rem auto;
       display: block;
       max-width: 100%;
     }
 
-    .close-game, .mute-button {
+    .close-game {
       background: #ff5caa;
       color: white;
       padding: 0.75rem 1.5rem;
       border-radius: 10px;
-      margin-top: 0.5rem;
+      margin-top: 1rem;
     }
 
     .sticker-palette {
       display: none;
       position: absolute;
       background: #ffe6f0;
-      padding: 0.5rem;
+      padding: 1rem;
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       z-index: 10;
@@ -170,7 +177,7 @@
     .sticker {
       font-size: 2rem;
       cursor: pointer;
-      margin: 0.25rem;
+      margin: 0.5rem;
       display: inline-block;
       transition: transform 0.2s;
     }
@@ -182,33 +189,14 @@
     .prompt-container {
       font-size: 1.25rem;
       color: #ff3399;
-      margin: 0.5rem 0;
+      margin: 1rem 0;
     }
 
     .undo-redo {
       display: flex;
       justify-content: center;
-      gap: 0.5rem;
-    }
-
-    .unicorn-speech {
-      background: white;
-      border: 2px solid #ff99cc;
-      border-radius: 10px;
-      padding: 0.5rem;
-      max-width: 200px;
-      word-wrap: break-word;
-      position: absolute;
-      top: 20px;
-      left: 20px;
-    }
-
-    .component, .device {
-      transition: transform 0.2s;
-    }
-
-    .component:hover, .device:hover {
-      transform: scale(1.1);
+      gap: 1rem;
+      width: 100%;
     }
 
     .reward-animation {
@@ -228,32 +216,16 @@
     @media (max-width: 768px) {
       h1 { font-size: 2rem; }
       .tab { font-size: 1rem; padding: 0.5rem 1rem; }
-      .toolbox { grid-template-columns: 1fr; }
+      .toolbox { grid-template-columns: 1fr; gap: 1rem; padding: 1rem; }
       button, select, input { font-size: 0.9rem; padding: 0.5rem; }
       #canvas, .game-canvas { width: 100%; height: auto; }
-      .game-window { width: 95%; }
+      .game-window { width: 95%; padding: 1rem; }
+      .section { padding: 1rem; }
     }
   </style>
 </head>
 <body>
   <h1>DrawHelloKitty 🎀✏️</h1>
-
-  <!-- Audio Elements -->
-  <audio id="barbieMusic" loop>
-    <source src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" type="audio/mp3">
-  </audio>
-  <audio id="unicornMusic" loop>
-    <source src="https://www.bensound.com/bensound-music/bensound-happyrock.mp3" type="audio/mp3">
-  </audio>
-  <audio id="roboticsMusic" loop>
-    <source src="https://www.bensound.com/bensound-music/bensound-scifi.mp3" type="audio/mp3">
-  </audio>
-  <audio id="carMusic" loop>
-    <source src="https://www.bensound.com/bensound-music/bensound-goinghigher.mp3" type="audio/mp3">
-  </audio>
-  <audio id="iotMusic" loop>
-    <source src="https://www.bensound.com/bensound-music/bensound-energy.mp3" type="audio/mp3">
-  </audio>
 
   <div class="tab-container">
     <div class="tab active" onclick="switchTab('drawing')" aria-label="Drawing Tab">Drawing</div>
@@ -323,15 +295,9 @@
     <div class="section" style="max-width: 600px; margin: 0 auto;">
       <h2>🎮 Fun Games 🎮</h2>
       <button onclick="startScienceQuiz()" aria-label="Science Quiz">🔬 Science Quiz</button>
-      <button onclick="startBarbieDressUp()" aria-label="Barbie Dress-Up">👗 Barbie Dress-Up</button>
-      <button onclick="startUnicornTalking()" aria-label="Unicorn Talking">🦄 Unicorn Talking</button>
-      <button onclick="startRoboticsGame()" aria-label="Robotics Game">🤖 Robotics</button>
-      <button onclick="startCarBuildingGame()" aria-label="Car Building">🚗 Car Building</button>
-      <button onclick="startIoTSmartHome()" aria-label="Smart Home">🏠 Smart Home</button>
       <button onclick="startScienceExperiment()" aria-label="Science Experiment">🧪 Science Experiment</button>
       <button onclick="startClockTimeGame()" aria-label="Clock Time Game">⏰ Clock Time</button>
       <button onclick="startShopkeeperMoneyGame()" aria-label="Shopkeeper Money Game">💸 Shopkeeper</button>
-      <button class="mute-button" onclick="toggleMusic()" aria-label="Toggle Music">🎵 Toggle Music</button>
     </div>
   </div>
 
@@ -367,8 +333,8 @@
     <div class="game-window">
       <h2 id="gameTitle">Game</h2>
       <canvas class="game-canvas" id="gameCanvas" width="400" height="400" aria-label="Game Canvas"></canvas>
-      <div id="gameInstructions" style="margin: 0.5rem 0; font-size: 1.1rem;"></div>
-      <div id="gameScore" style="font-weight: bold; margin: 0.5rem 0; font-size: 1.1rem;"></div>
+      <div id="gameInstructions" style="margin: 1rem 0; font-size: 1.1rem;"></div>
+      <div id="gameScore" style="font-weight: bold; margin: 1rem 0; font-size: 1.1rem;"></div>
       <button class="close-game" onclick="closeGame()" aria-label="Close Game">Close Game</button>
     </div>
   </div>
@@ -378,1209 +344,804 @@
   </footer>
 
   <script>
-    // Canvas setup
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d", { alpha: true });
-    const gameCanvas = document.getElementById("gameCanvas");
-    const gameCtx = gameCanvas.getContext("2d", { alpha: true });
+    document.addEventListener("DOMContentLoaded", () => {
+      // Canvas setup
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d", { alpha: true });
+      const gameCanvas = document.getElementById("gameCanvas");
+      const gameCtx = gameCanvas.getContext("2d", { alpha: true });
 
-    // Drawing state
-    let drawing = false;
-    let brushColor = "#ff1493";
-    let brushSize = 5;
-    let isEraser = false;
-    let currentBrush = "crayon";
-    let drawingHistory = [];
-    let historyIndex = -1;
-    let connectDotsMode = false;
-    let dotPoints = [];
-    let coloringBookMode = false;
-    let coloringBookImage = null;
-    let lastPoint = null;
-    let canvasBackground = "white";
+      // Drawing state
+      let drawing = false;
+      let brushColor = "#ff1493";
+      let brushSize = 5;
+      let isEraser = false;
+      let currentBrush = "crayon";
+      let drawingHistory = [];
+      let historyIndex = -1;
+      let connectDotsMode = false;
+      let dotPoints = [];
+      let coloringBookMode = false;
+      let coloringBookImage = null;
+      let lastPoint = null;
+      let canvasBackground = "white";
+      let currentGame = null;
+      let gameScore = 0;
+      let currentQuestion = 0;
+      let questions = [];
+      let experimentChemicals = [];
+      let targetTime = { hour: 0, minute: 0 };
+      let clockHands = { hour: 0, minute: 0 };
+      let shopItem = { name: "", price: 0 };
+      let moneyOptions = [];
 
-    // Game state
-    let currentGame = null;
-    let gameScore = 0;
-    let isMusicMuted = false;
-    let currentMusic = null;
+      // Initialize
+      const colorPicker = document.getElementById("colorPicker");
+      const sizeSlider = document.getElementById("sizeSlider");
+      const sizeValue = document.getElementById("sizeValue");
+      const brushType = document.getElementById("brushType");
 
-    // Barbie Dress-Up state
-    let selectedDoll = "barbie";
-    let barbieOutfits = {
-      barbie: { dress: "party", color: "#ff66b2", makeup: "none", theme: "beach" },
-      ken: { dress: "casual", color: "#66b3ff", makeup: "none", theme: "city" },
-      skipper: { dress: "sporty", color: "#66ffb3", makeup: "none", theme: "adventure" }
-    };
-
-    // Unicorn Talking state
-    let unicornMessages = [
-      "Wow, you're so sparkly! ✨",
-      "Let's gallop to a magical land! 🦄",
-      "You're my best friend! 😺"
-    ];
-
-    // Robotics state
-    let circuitComponents = [];
-    let selectedComponent = null;
-
-    // Car Building state
-    let carParts = { wheels: false, motor: false, battery: false };
-    let carBuilt = false;
-
-    // IoT Smart Home state
-    let smartHomeDevices = {
-      fan: false,
-      geyser: false,
-      fridge: false,
-      phone: false,
-      tv: false
-    };
-
-    // Initialize
-    document.getElementById("colorPicker").value = brushColor;
-    document.getElementById("sizeSlider").oninput = function(e) {
-      brushSize = e.target.value;
-      document.getElementById("sizeValue").textContent = brushSize;
-    };
-
-    // Event listeners
-    canvas.addEventListener("mousedown", startDrawing);
-    canvas.addEventListener("mouseup", stopDrawing);
-    canvas.addEventListener("mouseleave", stopDrawing);
-    canvas.addEventListener("mousemove", draw);
-    canvas.addEventListener("touchstart", handleTouchStart, { passive: false });
-    canvas.addEventListener("touchmove", handleTouchMove, { passive: false });
-    canvas.addEventListener("touchend", stopDrawing, { passive: false });
-
-    document.getElementById("brushType").onchange = function(e) {
-      currentBrush = e.target.value;
-      isEraser = false;
-    };
-
-    document.getElementById("colorPicker").oninput = function(e) {
-      brushColor = e.target.value;
-      isEraser = false;
-    };
-
-    // Utility functions
-    function getCanvasCoords(e, canvasElement) {
-      const rect = canvasElement.getBoundingClientRect();
-      const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-      const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-      return {
-        x: (clientX - rect.left) * (canvasElement.width / rect.width),
-        y: (clientY - rect.top) * (canvasElement.height / rect.height)
+      colorPicker.value = brushColor;
+      sizeSlider.oninput = function(e) {
+        brushSize = e.target.value;
+        sizeValue.textContent = brushSize;
       };
-    }
 
-    // Tab switching
-    function switchTab(tab) {
-      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-      document.querySelectorAll(".content-area").forEach(c => c.classList.remove("active"));
-      document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add("active");
-      document.getElementById(`${tab}-tab`).classList.add("active");
-      if (tab !== "drawing") {
-        coloringBookMode = false;
-        connectDotsMode = false;
-      }
-      stopMusic();
-    }
-
-    // Drawing functions
-    function startDrawing(e) {
-      e.preventDefault();
-      if (coloringBookMode || connectDotsMode) {
-        handleSpecialMode(e);
-        return;
-      }
-      drawing = true;
-      saveDrawingState();
-      draw(e);
-    }
-
-    function stopDrawing() {
-      drawing = false;
-      ctx.beginPath();
-      lastPoint = null;
-    }
-
-    function draw(e) {
-      if (!drawing) return;
-      const { x, y } = getCanvasCoords(e, canvas);
-      ctx.lineJoin = "round";
-      ctx.lineCap = "round";
-      if (isEraser) {
-        ctx.globalCompositeOperation = "destination-out";
-        ctx.strokeStyle = "rgba(0,0,0,1)";
-      } else {
-        ctx.globalCompositeOperation = "source-over";
-        ctx.strokeStyle = brushColor;
-        ctx.fillStyle = brushColor;
-      }
-      ctx.lineWidth = brushSize;
-      if (currentBrush === "crayon") {
-        drawCrayon(x, y);
-      } else {
-        drawMarker(x, y);
-      }
-    }
-
-    function drawCrayon(x, y) {
-      if (lastPoint) {
-        ctx.beginPath();
-        ctx.moveTo(lastPoint.x, lastPoint.y);
-        ctx.lineTo(x, y);
-        ctx.stroke();
-      }
-      ctx.beginPath();
-      ctx.arc(x, y, brushSize / 2, 0, Math.PI * 2);
-      ctx.fill();
-      lastPoint = { x, y };
-    }
-
-    function drawMarker(x, y) {
-      if (lastPoint) {
-        ctx.beginPath();
-        ctx.moveTo(lastPoint.x, lastPoint.y);
-        ctx.lineTo(x, y);
-        ctx.stroke();
-      }
-      lastPoint = { x, y };
-    }
-
-    function handleTouchStart(e) {
-      e.preventDefault();
-      const touch = e.touches[0];
-      const mouseEvent = new MouseEvent("mousedown", {
-        clientX: touch.clientX,
-        clientY: touch.clientY
-      });
-      canvas.dispatchEvent(mouseEvent);
-    }
-
-    function handleTouchMove(e) {
-      e.preventDefault();
-      const touch = e.touches[0];
-      const mouseEvent = new MouseEvent("mousemove", {
-        clientX: touch.clientX,
-        clientY: touch.clientY
-      });
-      canvas.dispatchEvent(mouseEvent);
-    }
-
-    // Shape drawing
-    function drawShape(shape) {
-      saveDrawingState();
-      ctx.fillStyle = brushColor;
-      ctx.strokeStyle = brushColor;
-      ctx.lineWidth = brushSize;
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-      const size = Math.min(canvas.width, canvas.height) * 0.3;
-      ctx.beginPath();
-      switch (shape) {
-        case "circle":
-          ctx.arc(centerX, centerY, size / 2, 0, Math.PI * 2);
-          ctx.fill();
-          break;
-        case "square":
-          ctx.rect(centerX - size / 2, centerY - size / 2, size, size);
-          ctx.fill();
-          break;
-        case "triangle":
-          ctx.moveTo(centerX, centerY - size / 2);
-          ctx.lineTo(centerX + size / 2, centerY + size / 2);
-          ctx.lineTo(centerX - size / 2, centerY + size / 2);
-          ctx.closePath();
-          ctx.fill();
-          break;
-      }
-    }
-
-    // Tool functions
-    function toggleEraser() {
-      isEraser = !isEraser;
-      document.getElementById("brushType").value = isEraser ? "crayon" : currentBrush;
-    }
-
-    function clearCanvas() {
-      saveDrawingState();
-      ctx.fillStyle = canvasBackground;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      if (coloringBookMode && coloringBookImage) {
-        ctx.drawImage(coloringBookImage, 0, 0, canvas.width, canvas.height);
-      }
-      if (connectDotsMode) {
-        renderDots();
-      }
-    }
-
-    function changeTheme(theme) {
-      canvasBackground = theme === "pink" ? "#ffe6f0" : theme === "sky" ? "#e0f7fa" : "white";
-      clearCanvas();
-    }
-
-    function addName() {
-      const name = document.getElementById("nameInput").value.trim();
-      if (!name) return;
-      saveDrawingState();
-      ctx.fillStyle lfillStyle = brushColor;
-      ctx.font = "24px Comic Sans MS";
-      ctx.fillText(name, 20, 40);
-    }
-
-    function stampEmoji(emoji) {
-      saveDrawingState();
-      ctx.font = "40px serif";
-      ctx.fillStyle = brushColor;
-      const x = Math.random() * (canvas.width - 50) + 25;
-      const y = Math.random() * (canvas.height - 50) + 25;
-      ctx.fillText(emoji, x, y);
-    }
-
-    function showStickers() {
-      const palette = document.getElementById("stickerPalette");
-      palette.style.display = "block";
-      palette.style.left = "50px";
-      palette.style.top = "50px";
-      document.addEventListener("click", closeStickers, { once: true });
-    }
-
-    function closeStickers(e) {
-      const palette = document.getElementById("stickerPalette");
-      if (!palette.contains(e.target)) {
-        palette.style.display = "none";
-      } else {
-        document.addEventListener("click", closeStickers, { once: true });
-      }
-    }
-
-    // History functions
-    function saveDrawingState() {
-      if (historyIndex < drawingHistory.length - 1) {
-        drawingHistory = drawingHistory.slice(0, historyIndex + 1);
-      }
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      drawingHistory.push(imageData);
-      historyIndex++;
-      if (drawingHistory.length > 20) {
-        drawingHistory.shift();
-        historyIndex--;
-      }
-    }
-
-    function undo() {
-      if (historyIndex <= 0) return;
-      historyIndex--;
-      ctx.putImageData(drawingHistory[historyIndex], 0, 0);
-      if (coloringBookMode && coloringBookImage) {
-        ctx.drawImage(coloringBookImage, 0, 0, canvas.width, canvas.height);
-      }
-      if (connectDotsMode) {
-        renderDots();
-      }
-    }
-
-    function redo() {
-      if (historyIndex >= drawingHistory.length - 1) return;
-      historyIndex++;
-      ctx.putImageData(drawingHistory[historyIndex], 0, 0);
-      if (coloringBookMode && coloringBookImage) {
-        ctx.drawImage(coloringBookImage, 0, 0, canvas.width, canvas.height);
-      }
-      if (connectDotsMode) {
-        renderDots();
-      }
-    }
-
-    // Drawing Prompt
-    function generateDrawingPrompt() {
-      const prompts = [
-        "Draw a rocket in space 🚀",
-        "Draw a clock showing 6:00 ⏰",
-        "Draw a shop with toys 🏬",
-        "Draw a scientist in a lab 🧪",
-        "Draw the solar system ☀️"
-      ];
-      document.getElementById("drawingPrompt").textContent = prompts[Math.floor(Math.random() * prompts.length)];
-    }
-
-    // Coloring Book
-    function startColoringBook() {
-      saveDrawingState();
-      coloringBookMode = true;
-      connectDotsMode = false;
-      clearCanvas();
-      coloringBookImage = new Image();
-      coloringBookImage.src = createColoringBookImage();
-      coloringBookImage.onload = () => {
-        ctx.drawImage(coloringBookImage, 0, 0, canvas.width, canvas.height);
+      brushType.onchange = function(e) {
+        currentBrush = e.target.value;
+        isEraser = false;
       };
-    }
 
-    function createColoringBookImage() {
-      const tempCanvas = document.createElement("canvas");
-      tempCanvas.width = canvas.width;
-      tempCanvas.height = canvas.height;
-      const tempCtx = tempCanvas.getContext("2d");
-      tempCtx.strokeStyle = "black";
-      tempCtx.lineWidth = 2;
-      tempCtx.beginPath();
-      tempCtx.arc(canvas.width / 2, canvas.height / 2, 100, 0, Math.PI * 2);
-      tempCtx.stroke();
-      return tempCanvas.toDataURL();
-    }
+      colorPicker.oninput = function(e) {
+        brushColor = e.target.value;
+        isEraser = false;
+      };
 
-    // Connect-the-Dots
-    function startConnectDots() {
-      saveDrawingState();
-      connectDotsMode = true;
-      coloringBookMode = false;
-      clearCanvas();
-      dotPoints = generateDots();
-      renderDots();
-    }
+      // Event listeners
+      canvas.addEventListener("mousedown", startDrawing);
+      canvas.addEventListener("mouseup", stopDrawing);
+      canvas.addEventListener("mouseleave", stopDrawing);
+      canvas.addEventListener("mousemove", draw);
+      canvas.addEventListener("touchstart", handleTouchStart, { passive: false });
+      canvas.addEventListener("touchmove", handleTouchMove, { passive: false });
+      canvas.addEventListener("touchend", stopDrawing, { passive: false });
 
-    function generateDots() {
-      const points = [];
-      const numDots = 5;
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-      const radius = 100;
-      for (let i = 0; i < numDots; i++) {
-        const angle = (i / numDots) * Math.PI * 2;
-        points.push({ x: centerX + Math.cos(angle) * radius, y: centerY + Math.sin(angle) * radius, number: i + 1 });
+      // Utility functions
+      function getCanvasCoords(e, canvasElement) {
+        const rect = canvasElement.getBoundingClientRect();
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+        return {
+          x: (clientX - rect.left) * (canvasElement.width / rect.width),
+          y: (clientY - rect.top) * (canvasElement.height / rect.height)
+        };
       }
-      return points;
-    }
 
-    function renderDots() {
-      ctx.fillStyle = "black";
-      ctx.font = "20px Comic Sans MS";
-      dotPoints.forEach(point => {
+      // Tab switching
+      window.switchTab = function(tab) {
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        document.querySelectorAll(".content-area").forEach(c => c.classList.remove("active"));
+        document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add("active");
+        document.getElementById(`${tab}-tab`).classList.add("active");
+        if (tab !== "drawing") {
+          coloringBookMode = false;
+          connectDotsMode = false;
+        }
+      };
+
+      // Drawing functions
+      function startDrawing(e) {
+        e.preventDefault();
+        if (coloringBookMode || connectDotsMode) {
+          handleSpecialMode(e);
+          return;
+        }
+        drawing = true;
+        saveDrawingState();
+        draw(e);
+      }
+
+      function stopDrawing() {
+        drawing = false;
         ctx.beginPath();
-        ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillText(point.number, point.x + 10, point.y + 10);
-      });
-    }
-
-    function handleSpecialMode(e) {
-      const { x, y } = getCanvasCoords(e, canvas);
-      if (connectDotsMode) {
-        const clickedDot = dotPoints.find(dot => 
-          Math.hypot(dot.x - x, dot.y - y) < 10
-        );
-        if (clickedDot && clickedDot.number === dotPoints[0].number) {
-          saveDrawingState();
-          ctx.beginPath();
-          ctx.moveTo(clickedDot.x, clickedDot.y);
-          dotPoints.push(dotPoints.shift());
-          renderDots();
-        } else if (clickedDot && clickedDot.number === dotPoints[0].number + 1) {
-          saveDrawingState();
-          ctx.strokeStyle = brushColor;
-          ctx.lineWidth = brushSize;
-          ctx.lineTo(clickedDot.x, clickedDot.y);
-          ctx.stroke();
-          dotPoints.push(dotPoints.shift());
-          renderDots();
-        }
+        lastPoint = null;
       }
-    }
 
-    // Save/export
-    function saveImage(type) {
-      const link = document.createElement("a");
-      const fileName = `DrawHelloKitty_${new Date().toISOString().slice(0,10)}.${type}`;
-      link.download = fileName;
-      if (type === "pdf") {
-        try {
-          const { jsPDF } = window.jspdf;
-          const pdf = new jsPDF();
-          const imgData = canvas.toDataURL("image/png");
-          pdf.addImage(imgData, "PNG", 10, 10, canvas.width / 4, canvas.height / 4);
-          pdf.save(fileName);
-        } catch (e) {
-          alert("PDF export failed. Try PNG.");
-        }
-        return;
-      }
-      link.href = canvas.toDataURL(`image/${type}`);
-      link.click();
-    }
-
-    // Music control
-    function toggleMusic() {
-      isMusicMuted = !isMusicMuted;
-      document.querySelector(".mute-button").textContent = isMusicMuted ? "🎶 Play Music" : "🎵 Mute Music";
-      if (currentMusic) {
-        if (isMusicMuted) {
-          currentMusic.pause();
+      function draw(e) {
+        if (!drawing) return;
+        const { x, y } = getCanvasCoords(e, canvas);
+        ctx.lineJoin = "round";
+        ctx.lineCap = "round";
+        if (isEraser) {
+          ctx.globalCompositeOperation = "destination-out";
+          ctx.strokeStyle = "rgba(0,0,0,1)";
         } else {
-          currentMusic.play();
+          ctx.globalCompositeOperation = "source-over";
+          ctx.strokeStyle = brushColor;
+          ctx.fillStyle = brushColor;
+        }
+        ctx.lineWidth = brushSize;
+        if (currentBrush === "crayon") {
+          drawCrayon(x, y);
+        } else {
+          drawMarker(x, y);
         }
       }
-    }
 
-    function playMusic(musicId) {
-      stopMusic();
-      currentMusic = document.getElementById(musicId);
-      if (!isMusicMuted) {
-        currentMusic.play().catch(() => {});
-      }
-    }
-
-    function stopMusic() {
-      if (currentMusic) {
-        currentMusic.pause();
-        currentMusic.currentTime = 0;
-      }
-    }
-
-    // Game functions
-    function closeGame() {
-      document.getElementById("gameContainer").style.display = "none";
-      gameCanvas.onclick = null;
-      document.querySelectorAll(".reward-animation").forEach(el => el.remove());
-      currentGame = null;
-      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-      stopMusic();
-    }
-
-    function showRewardAnimation(emoji = "😺") {
-      const reward = document.createElement("div");
-      reward.className = "reward-animation";
-      reward.textContent = emoji;
-      document.getElementById("gameContainer").appendChild(reward);
-      setTimeout(() => reward.remove(), 1500);
-    }
-
-    // Barbie Dress-Up Game
-    function startBarbieDressUp() {
-      currentGame = "barbieDressUp";
-      document.getElementById("gameContainer").style.display = "flex";
-      document.getElementById("gameTitle").textContent = "Barbie Dress-Up Game";
-      document.getElementById("gameInstructions").textContent = "Click to choose dolls, dresses, makeup, and themes! 👗";
-      gameScore = 0;
-      document.getElementById("gameScore").textContent = `Creations: ${gameScore}`;
-      playMusic("barbieMusic");
-      renderBarbieDressUp();
-      gameCanvas.onclick = handleBarbieDressUp;
-    }
-
-    function renderBarbieDressUp() {
-      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-      const theme = barbieOutfits[selectedDoll].theme;
-      gameCtx.fillStyle = theme === "beach" ? "#fffacd" : theme === "royal" ? "#e6e6fa" : "#f0f0f0";
-      gameCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
-      gameCtx.fillStyle = barbieOutfits[selectedDoll].color;
-      gameCtx.beginPath();
-      gameCtx.moveTo(200, 100);
-      gameCtx.lineTo(150, 300);
-      gameCtx.lineTo(250, 300);
-      gameCtx.closePath();
-      gameCtx.fill();
-      if (barbieOutfits[selectedDoll].dress === "party") {
-        gameCtx.fillStyle = "white";
-        for (let i = 0; i < 5; i++) {
-          gameCtx.beginPath();
-          gameCtx.arc(170 + i * 20, 150 + i * 30, 5, 0, Math.PI * 2);
-          gameCtx.fill();
+      function drawCrayon(x, y) {
+        if (lastPoint) {
+          ctx.beginPath();
+          ctx.moveTo(lastPoint.x, lastPoint.y);
+          ctx.lineTo(x, y);
+          ctx.stroke();
         }
-      } else if (barbieOutfits[selectedDoll].dress === "princess") {
-        gameCtx.fillStyle = "gold";
-        gameCtx.fillRect(180, 120, 40, 80);
-      } else if (barbieOutfits[selectedDoll].dress === "sporty") {
-        gameCtx.fillStyle = "black";
-        gameCtx.fillRect(170, 150, 60, 20);
+        ctx.beginPath();
+        ctx.arc(x, y, brushSize / 2, 0, Math.PI * 2);
+        ctx.fill();
+        lastPoint = { x, y };
       }
-      if (barbieOutfits[selectedDoll].makeup === "lipstick") {
-        gameCtx.fillStyle = "red";
-        gameCtx.fillRect(190, 110, 20, 5);
-      } else if (barbieOutfits[selectedDoll].makeup === "eyeshadow") {
-        gameCtx.fillStyle = "blue";
-        gameCtx.fillRect(180, 100, 40, 5);
-      }
-      const dolls = ["barbie", "ken", "skipper"];
-      for (let i = 0; i < dolls.length; i++) {
-        gameCtx.fillStyle = selectedDoll === dolls[i] ? "#ff66b2" : "#ff99cc";
-        gameCtx.fillRect(50 + i * 100, 10, 80, 40);
-        gameCtx.fillStyle = "white";
-        gameCtx.fillText(dolls[i], 60 + i * 100, 35);
-      }
-      const dresses = ["party", "princess", "sporty"];
-      for (let i = 0; i < dresses.length; i++) {
-        gameCtx.fillStyle = barbieOutfits[selectedDoll].dress === dresses[i] ? "#ff66b2" : "#ff99cc";
-        gameCtx.fillRect(50 + i * 100, 60, 80, 40);
-        gameCtx.fillStyle = "white";
-        gameCtx.fillText(dresses[i], 60 + i * 100, 85);
-      }
-      const makeup = ["none", "lipstick", "eyeshadow"];
-      for (let i = 0; i < makeup.length; i++) {
-        gameCtx.fillStyle = barbieOutfits[selectedDoll].makeup === makeup[i] ? "#ff66b2" : "#ff99cc";
-        gameCtx.fillRect(50 + i * 100, 110, 80, 40);
-        gameCtx.fillStyle = "white";
-        gameCtx.fillText(makeup[i], 60 + i * 100, 135);
-      }
-      const themes = ["beach", "royal", "city"];
-      for (let i = 0; i < themes.length; i++) {
-        gameCtx.fillStyle = barbieOutfits[selectedDoll].theme === themes[i] ? "#ff66b2" : "#ff99cc";
-        gameCtx.fillRect(50 + i * 100, 160, 80, 40);
-        gameCtx.fillStyle = "white";
-        gameCtx.fillText(themes[i], 60 + i * 100, 185);
-      }
-    }
 
-    function handleBarbieDressUp(e) {
-      const { x, y } = getCanvasCoords(e, gameCanvas);
-      if (y >= 10 && y <= 50) {
-        const index = Math.floor((x - 50) / 100);
-        if (index >= 0 && index < 3) {
-          selectedDoll = ["barbie", "ken", "skipper"][index];
-          gameScore++;
-          showRewardAnimation("👗");
-          document.getElementById("gameScore").textContent = `Creations: ${gameScore}`;
-          renderBarbieDressUp();
+      function drawMarker(x, y) {
+        if (lastPoint) {
+          ctx.beginPath();
+          ctx.moveTo(lastPoint.x, lastPoint.y);
+          ctx.lineTo(x, y);
+          ctx.stroke();
         }
-      } else if (y >= 60 && y <= 100) {
-        const index = Math.floor((x - 50) / 100);
-        if (index >= 0 && index < 3) {
-          barbieOutfits[selectedDoll].dress = ["party", "princess", "sporty"][index];
-          gameScore++;
-          showRewardAnimation("👗");
-          document.getElementById("gameScore").textContent = `Creations: ${gameScore}`;
-          renderBarbieDressUp();
-        }
-      } else if (y >= 110 && y <= 150) {
-        const index = Math.floor((x - 50) / 100);
-        if (index >= 0 && index < 3) {
-          barbieOutfits[selectedDoll].makeup = ["none", "lipstick", "eyeshadow"][index];
-          gameScore++;
-          showRewardAnimation("💄");
-          document.getElementById("gameScore").textContent = `Creations: ${gameScore}`;
-          renderBarbieDressUp();
-        }
-      } else if (y >= 160 && y <= 200) {
-        const index = Math.floor((x - 50) / 100);
-        if (index >= 0 && index < 3) {
-          barbieOutfits[selectedDoll].theme = ["beach", "royal", "city"][index];
-          gameScore++;
-          showRewardAnimation("🌴");
-          document.getElementById("gameScore").textContent = `Creations: ${gameScore}`;
-          renderBarbieDressUp();
-        }
+        lastPoint = { x, y };
       }
-    }
 
-    // Unicorn Talking Game
-    function startUnicornTalking() {
-      currentGame = "unicornTalking";
-      document.getElementById("gameContainer").style.display = "flex";
-      document.getElementById("gameTitle").textContent = "Unicorn Talking Game";
-      document.getElementById("gameInstructions").innerHTML = 'Type a message and press Enter to talk to the unicorn! <input type="text" id="unicornInput" style="width: 200px;" aria-label="Unicorn Message Input"/>';
-      gameScore = 0;
-      document.getElementById("gameScore").textContent = `Messages: ${gameScore}`;
-      playMusic("unicornMusic");
-      renderUnicornTalking();
-      const input = document.getElementById("unicornInput");
-      input.focus();
-      input.onkeydown = (e) => {
-        if (e.key === "Enter" && input.value.trim()) {
-          gameScore++;
-          document.getElementById("gameScore").textContent = `Messages: ${gameScore}`;
-          showRewardAnimation("🦄");
-          renderUnicornTalking(input.value.trim());
-          input.value = "";
+      function handleTouchStart(e) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const mouseEvent = new MouseEvent("mousedown", {
+          clientX: touch.clientX,
+          clientY: touch.clientY
+        });
+        canvas.dispatchEvent(mouseEvent);
+      }
+
+      function handleTouchMove(e) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const mouseEvent = new MouseEvent("mousemove", {
+          clientX: touch.clientX,
+          clientY: touch.clientY
+        });
+        canvas.dispatchEvent(mouseEvent);
+      }
+
+      // Shape drawing
+      window.drawShape = function(shape) {
+        saveDrawingState();
+        ctx.fillStyle = brushColor;
+        ctx.strokeStyle = brushColor;
+        ctx.lineWidth = brushSize;
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const size = Math.min(canvas.width, canvas.height) * 0.3;
+        ctx.beginPath();
+        switch (shape) {
+          case "circle":
+            ctx.arc(centerX, centerY, size / 2, 0, Math.PI * 2);
+            ctx.fill();
+            break;
+          case "square":
+            ctx.rect(centerX - size / 2, centerY - size / 2, size, size);
+            ctx.fill();
+            break;
+          case "triangle":
+            ctx.moveTo(centerX, centerY - size / 2);
+            ctx.lineTo(centerX + size / 2, centerY + size / 2);
+            ctx.lineTo(centerX - size / 2, centerY + size / 2);
+            ctx.closePath();
+            ctx.fill();
+            break;
         }
       };
-      gameCanvas.onclick = () => input.focus();
-    }
 
-    function renderUnicornTalking(message = "") {
-      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-      gameCtx.fillStyle = "#e0f7fa";
-      gameCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
-      gameCtx.font = "60px serif";
-      gameCtx.fillStyle = "black";
-      gameCtx.fillText("🦄", 150, 250);
-      if (message) {
+      // Tool functions
+      window.toggleEraser = function() {
+        isEraser = !isEraser;
+        brushType.value = isEraser ? "crayon" : currentBrush;
+      };
+
+      window.clearCanvas = function() {
+        saveDrawingState();
+        ctx.fillStyle = canvasBackground;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        if (coloringBookMode && coloringBookImage) {
+          ctx.drawImage(coloringBookImage, 0, 0, canvas.width, canvas.height);
+        }
+        if (connectDotsMode) {
+          renderDots();
+        }
+      };
+
+      window.changeTheme = function(theme) {
+        canvasBackground = theme === "pink" ? "#ffe6f0" : theme === "sky" ? "#e0f7fa" : "white";
+        clearCanvas();
+      };
+
+      window.addName = function() {
+        const name = document.getElementById("nameInput").value.trim();
+        if (!name) return;
+        saveDrawingState();
+        ctx.fillStyle = brushColor;
+        ctx.font = "24px Comic Sans MS";
+        ctx.fillText(name, 20, 40);
+      };
+
+      window.stampEmoji = function(emoji) {
+        saveDrawingState();
+        ctx.font = "40px serif";
+        ctx.fillStyle = brushColor;
+        const x = Math.random() * (canvas.width - 50) + 25;
+        const y = Math.random() * (canvas.height - 50) + 25;
+        ctx.fillText(emoji, x, y);
+      };
+
+      window.showStickers = function() {
+        const palette = document.getElementById("stickerPalette");
+        palette.style.display = "block";
+        palette.style.left = "50px";
+        palette.style.top = "50px";
+        document.addEventListener("click", closeStickers, { once: true });
+      };
+
+      function closeStickers(e) {
+        const palette = document.getElementById("stickerPalette");
+        if (!palette.contains(e.target)) {
+          palette.style.display = "none";
+        } else {
+          document.addEventListener("click", closeStickers, { once: true });
+        }
+      }
+
+      // History functions
+      function saveDrawingState() {
+        if (historyIndex < drawingHistory.length - 1) {
+          drawingHistory = drawingHistory.slice(0, historyIndex + 1);
+        }
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        drawingHistory.push(imageData);
+        historyIndex++;
+        if (drawingHistory.length > 20) {
+          drawingHistory.shift();
+          historyIndex--;
+        }
+      }
+
+      window.undo = function() {
+        if (historyIndex <= 0) return;
+        historyIndex--;
+        ctx.putImageData(drawingHistory[historyIndex], 0, 0);
+        if (coloringBookMode && coloringBookImage) {
+          ctx.drawImage(coloringBookImage, 0, 0, canvas.width, canvas.height);
+        }
+        if (connectDotsMode) {
+          renderDots();
+        }
+      };
+
+      window.redo = function() {
+        if (historyIndex >= drawingHistory.length - 1) return;
+        historyIndex++;
+        ctx.putImageData(drawingHistory[historyIndex], 0, 0);
+        if (coloringBookMode && coloringBookImage) {
+          ctx.drawImage(coloringBookImage, 0, 0, canvas.width, canvas.height);
+        }
+        if (connectDotsMode) {
+          renderDots();
+        }
+      };
+
+      // Drawing Prompt
+      window.generateDrawingPrompt = function() {
+        const prompts = [
+          "Draw a rocket in space 🚀",
+          "Draw a clock showing 6:00 ⏰",
+          "Draw a shop with toys 🏬",
+          "Draw a scientist in a lab 🧪",
+          "Draw the solar system ☀️"
+        ];
+        document.getElementById("drawingPrompt").textContent = prompts[Math.floor(Math.random() * prompts.length)];
+      };
+
+      // Coloring Book
+      window.startColoringBook = function() {
+        saveDrawingState();
+        coloringBookMode = true;
+        connectDotsMode = false;
+        clearCanvas();
+        coloringBookImage = new Image();
+        coloringBookImage.src = createColoringBookImage();
+        coloringBookImage.onload = () => {
+          ctx.drawImage(coloringBookImage, 0, 0, canvas.width, canvas.height);
+        };
+      };
+
+      function createColoringBookImage() {
+        const tempCanvas = document.createElement("canvas");
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = canvas.height;
+        const tempCtx = tempCanvas.getContext("2d");
+        tempCtx.strokeStyle = "black";
+        tempCtx.lineWidth = 2;
+        tempCtx.beginPath();
+        tempCtx.arc(canvas.width / 2, canvas.height / 2, 100, 0, Math.PI * 2);
+        tempCtx.stroke();
+        return tempCanvas.toDataURL();
+      }
+
+      // Connect-the-Dots
+      window.startConnectDots = function() {
+        saveDrawingState();
+        connectDotsMode = true;
+        coloringBookMode = false;
+        clearCanvas();
+        dotPoints = generateDots();
+        renderDots();
+      };
+
+      function generateDots() {
+        const points = [];
+        const numDots = 5;
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = 100;
+        for (let i = 0; i < numDots; i++) {
+          const angle = (i / numDots) * Math.PI * 2;
+          points.push({ x: centerX + Math.cos(angle) * radius, y: centerY + Math.sin(angle) * radius, number: i + 1 });
+        }
+        return points;
+      }
+
+      function renderDots() {
+        ctx.fillStyle = "black";
+        ctx.font = "20px Comic Sans MS";
+        dotPoints.forEach(point => {
+          ctx.beginPath();
+          ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillText(point.number, point.x + 10, point.y + 10);
+        });
+      }
+
+      function handleSpecialMode(e) {
+        const { x, y } = getCanvasCoords(e, canvas);
+        if (connectDotsMode) {
+          const clickedDot = dotPoints.find(dot => 
+            Math.hypot(dot.x - x, dot.y - y) < 10
+          );
+          if (clickedDot && clickedDot.number === dotPoints[0].number) {
+            saveDrawingState();
+            ctx.beginPath();
+            ctx.moveTo(clickedDot.x, clickedDot.y);
+            dotPoints.push(dotPoints.shift());
+            renderDots();
+          } else if (clickedDot && clickedDot.number === dotPoints[0].number + 1) {
+            saveDrawingState();
+            ctx.strokeStyle = brushColor;
+            ctx.lineWidth = brushSize;
+            ctx.lineTo(clickedDot.x, clickedDot.y);
+            ctx.stroke();
+            dotPoints.push(dotPoints.shift());
+            renderDots();
+          }
+        }
+      }
+
+      // Save/export
+      window.saveImage = function(type) {
+        const link = document.createElement("a");
+        const fileName = `DrawHelloKitty_${new Date().toISOString().slice(0,10)}.${type}`;
+        link.download = fileName;
+        if (type === "pdf") {
+          try {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF();
+            const imgData = canvas.toDataURL("image/png");
+            pdf.addImage(imgData, "PNG", 10, 10, canvas.width / 4, canvas.height / 4);
+            pdf.save(fileName);
+          } catch (e) {
+            alert("PDF export failed. Try PNG.");
+          }
+          return;
+        }
+        link.href = canvas.toDataURL(`image/${type}`);
+        link.click();
+      };
+
+      // Game functions
+      window.closeGame = function() {
+        document.getElementById("gameContainer").style.display = "none";
+        gameCanvas.onclick = null;
+        document.querySelectorAll(".reward-animation").forEach(el => el.remove());
+        currentGame = null;
+        gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+      };
+
+      function showRewardAnimation(emoji = "😺") {
+        const reward = document.createElement("div");
+        reward.className = "reward-animation";
+        reward.textContent = emoji;
+        document.getElementById("gameContainer").appendChild(reward);
+        setTimeout(() => reward.remove(), 1500);
+      }
+
+      // Science Quiz Game
+      window.startScienceQuiz = function() {
+        currentGame = "scienceQuiz";
+        document.getElementById("gameContainer").style.display = "flex";
+        document.getElementById("gameTitle").textContent = "Science Quiz Game";
+        document.getElementById("gameInstructions").textContent = "Click the correct answer to earn points! 🌟";
+        gameScore = 0;
+        currentQuestion = 0;
+        document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
+        questions = [
+          { question: "What planet is known as the Red Planet?", answers: ["Mars", "Venus", "Jupiter"], correct: 0 },
+          { question: "What is the largest organ in the human body?", answers: ["Heart", "Skin", "Lung"], correct: 1 },
+          { question: "What force pulls objects to the ground?", answers: ["Magnetism", "Gravity", "Electricity"], correct: 1 }
+        ];
+        renderScienceQuiz();
+        gameCanvas.onclick = handleQuizAnswer;
+      };
+
+      function renderScienceQuiz() {
+        gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+        if (currentQuestion >= questions.length) {
+          gameCtx.font = "30px Comic Sans MS";
+          gameCtx.fillStyle = "black";
+          gameCtx.fillText(`Game Over! Score: ${gameScore}`, 50, 200);
+          gameCanvas.onclick = null;
+          return;
+        }
+        const q = questions[currentQuestion];
         gameCtx.font = "20px Comic Sans MS";
         gameCtx.fillStyle = "black";
-        const response = unicornMessages[Math.floor(Math.random() * unicornMessages.length)];
-        gameCtx.fillText(response, 50, 50);
+        gameCtx.fillText(q.question, 50, 100);
+        for (let i = 0; i < q.answers.length; i++) {
+          gameCtx.fillStyle = "#ff66b2";
+          gameCtx.fillRect(50, 150 + i * 60, 300, 50);
+          gameCtx.fillStyle = "white";
+          gameCtx.fillText(q.answers[i], 60, 180 + i * 60);
+        }
       }
-    }
 
-    // Robotics Game
-    function startRoboticsGame() {
-      currentGame = "robotics";
-      document.getElementById("gameContainer").style.display = "flex";
-      document.getElementById("gameTitle").textContent = "Robotics Game";
-      document.getElementById("gameInstructions").textContent = "Drag components to build a circuit! Connect correctly to light up! 💡";
-      gameScore = 0;
-      document.getElementById("gameScore").textContent = `Circuits: ${gameScore}`;
-      circuitComponents = [
-        { type: "battery", x: 50, y: 320, placed: false },
-        { type: "wire", x: 150, y: 320, placed: false },
-        { type: "led", x: 250, y: 320, placed: false }
-      ];
-      playMusic("roboticsMusic");
-      renderRoboticsGame();
-      gameCanvas.onmousedown = startDragComponent;
-      gameCanvas.onmousemove = dragComponent;
-      gameCanvas.onmouseup = dropComponent;
-    }
+      function handleQuizAnswer(e) {
+        const { x, y } = getCanvasCoords(e, gameCanvas);
+        const q = questions[currentQuestion];
+        for (let i = 0; i < q.answers.length; i++) {
+          if (x >= 50 && x <= 350 && y >= 150 + i * 60 && y <= 200 + i * 60) {
+            if (i === q.correct) {
+              gameScore += 10;
+              showRewardAnimation();
+            } else {
+              gameScore = Math.max(0, gameScore - 2);
+            }
+            document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
+            currentQuestion++;
+            renderScienceQuiz();
+            break;
+          }
+        }
+      }
 
-    function renderRoboticsGame() {
-      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-      gameCtx.fillStyle = "#f0f0f0";
-      gameCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
-      circuitComponents.forEach(comp => {
-        gameCtx.fillStyle = comp.type === "battery" ? "#ff0000" : comp.type === "wire" ? "#0000ff" : "#00ff00";
-        gameCtx.fillRect(comp.x, comp.y, 80, 40);
-        gameCtx.fillStyle = "white";
-        gameCtx.fillText(comp.type, comp.x + 10, comp.y + 25);
-      });
-      const placed = circuitComponents.filter(c => c.placed);
-      placed.forEach((comp, i) => {
-        gameCtx.fillStyle = comp.type === "battery" ? "#ff0000" : comp.type === "wire" ? "#0000ff" : "#00ff00";
-        gameCtx.fillRect(100 + i * 100, 150, 80, 40);
-      });
-      if (placed.length === 3) {
-        gameCtx.fillStyle = "yellow";
+      // Science Experiment Game
+      window.startScienceExperiment = function() {
+        currentGame = "scienceExperiment";
+        document.getElementById("gameContainer").style.display = "flex";
+        document.getElementById("gameTitle").textContent = "Science Experiment Game";
+        document.getElementById("gameInstructions").textContent = "Click chemicals to mix them and see what happens! 🧪";
+        gameScore = 0;
+        document.getElementById("gameScore").textContent = `Reactions: ${gameScore}`;
+        experimentChemicals = [];
+        renderScienceExperiment();
+        gameCanvas.onclick = handleExperimentMix;
+      };
+
+      function renderScienceExperiment() {
+        gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+        gameCtx.strokeStyle = "black";
+        gameCtx.lineWidth = 2;
         gameCtx.beginPath();
-        gameCtx.arc(300, 150, 20, 0, Math.PI * 2);
-        gameCtx.fill();
-        gameScore++;
-        showRewardAnimation("💡");
-        document.getElementById("gameScore").textContent = `Circuits: ${gameScore}`;
-        circuitComponents.forEach(c => (c.placed = false));
+        gameCtx.moveTo(150, 100);
+        gameCtx.lineTo(150, 300);
+        gameCtx.lineTo(250, 300);
+        gameCtx.lineTo(250, 100);
+        gameCtx.stroke();
+        if (experimentChemicals.length > 0) {
+          const mixedColor = experimentChemicals.length === 2 ? mixColors(experimentChemicals[0], experimentChemicals[1]) : experimentChemicals[0];
+          gameCtx.fillStyle = mixedColor;
+          gameCtx.fillRect(150, 200, 100, 100);
+        }
+        const chemicals = ["#ff0000", "#00ff00", "#0000ff"];
+        for (let i = 0; i < chemicals.length; i++) {
+          gameCtx.fillStyle = chemicals[i];
+          gameCtx.fillRect(50 + i * 100, 320, 80, 40);
+        }
       }
-    }
 
-    function startDragComponent(e) {
-      const { x, y } = getCanvasCoords(e, gameCanvas);
-      selectedComponent = circuitComponents.find(c => 
-        x >= c.x && x <= c.x + 80 && y >= c.y && y <= c.y + 40 && !c.placed
-      );
-    }
-
-    function dragComponent(e) {
-      if (!selectedComponent) return;
-      const { x, y } = getCanvasCoords(e, gameCanvas);
-      selectedComponent.x = x - 40;
-      selectedComponent.y = y - 20;
-      renderRoboticsGame();
-    }
-
-    function dropComponent() {
-      if (selectedComponent && selectedComponent.y < 200) {
-        selectedComponent.placed = true;
+      function mixColors(c1, c2) {
+        if ((c1 === "#ff0000" && c2 === "#00ff00") || (c1 === "#00ff00" && c2 === "#ff0000")) return "#ffff00";
+        if ((c1 === "#ff0000" && c2 === "#0000ff") || (c1 === "#0000ff" && c2 === "#ff0000")) return "#ff00ff";
+        if ((c1 === "#00ff00" && c2 === "#0000ff") || (c1 === "#0000ff" && c2 === "#00ff00")) return "#00ffff";
+        return c1;
       }
-      selectedComponent = null;
-      renderRoboticsGame();
-    }
 
-    // Car Building Game
-    function startCarBuildingGame() {
-      currentGame = "carBuilding";
-      document.getElementById("gameContainer").style.display = "flex";
-      document.getElementById("gameTitle").textContent = "Car Building Game";
-      document.getElementById("gameInstructions").textContent = "Click to add wheels, motor, and battery to build a car! 🚗";
-      gameScore = 0;
-      document.getElementById("gameScore").textContent = `Cars Built: ${gameScore}`;
-      carParts = { wheels: false, motor: false, battery: false };
-      carBuilt = false;
-      playMusic("carMusic");
-      renderCarBuildingGame();
-      gameCanvas.onclick = handleCarBuildingClick;
-    }
-
-    function renderCarBuildingGame() {
-      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-      gameCtx.fillStyle = "#f0f0f0";
-      gameCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
-      if (carBuilt) {
-        gameCtx.fillStyle = "red";
-        gameCtx.fillRect(100 + gameScore * 50, 150, 100, 50);
-        gameCtx.fillStyle = "black";
-        gameCtx.beginPath();
-        gameCtx.arc(120, 200, 15, 0, Math.PI * 2);
-        gameCtx.arc(180, 200, 15, 0, Math.PI * 2);
-        gameCtx.fill();
-        return;
-      }
-      gameCtx.fillStyle = carParts.wheels ? "#000000" : "#999999";
-      gameCtx.beginPath();
-      gameCtx.arc(120, 200, 15, 0, Math.PI * 2);
-      gameCtx.arc(180, 200, 15, 0, Math.PI * 2);
-      gameCtx.fill();
-      gameCtx.fillStyle = carParts.motor ? "#0000ff" : "#6666ff";
-      gameCtx.fillRect(140, 160, 40, 20);
-      gameCtx.fillStyle = carParts.battery ? "#ff0000" : "#ff6666";
-      gameCtx.fillRect(100, 160, 40, 20);
-      const parts = ["wheels", "motor", "battery"];
-      parts.forEach((part, i) => {
-        gameCtx.fillStyle = carParts[part] ? "#ff66b2" : "#ff99cc";
-        gameCtx.fillRect(50 + i * 100, 320, 80, 40);
-        gameCtx.fillStyle = "white";
-        gameCtx.fillText(part, 60 + i * 100, 345);
-      });
-    }
-
-    function handleCarBuildingClick(e) {
-      const { x, y } = getCanvasCoords(e, gameCanvas);
-      if (y >= 320 && y <= 360) {
-        const index = Math.floor((x - 50) / 100);
-        if (index >= 0 && index < 3) {
-          const part = ["wheels", "motor", "battery"][index];
-          carParts[part] = true;
-          if (carParts.wheels && carParts.motor && carParts.battery) {
-            carBuilt = true;
+      function handleExperimentMix(e) {
+        const { x, y } = getCanvasCoords(e, gameCanvas);
+        if (y >= 320 && y <= 360) {
+          const index = Math.floor((x - 50) / 100);
+          if (index >= 0 && index < 3) {
+            experimentChemicals.push(["#ff0000", "#00ff00", "#0000ff"][index]);
+            if (experimentChemicals.length > 2) experimentChemicals.shift();
             gameScore++;
-            showRewardAnimation("🚗");
-            document.getElementById("gameScore").textContent = `Cars Built: ${gameScore}`;
-            setTimeout(() => {
-              carParts = { wheels: false, motor: false, battery: false };
-              carBuilt = false;
-              renderCarBuildingGame();
-            }, 2000);
+            showRewardAnimation("🧪");
+            document.getElementById("gameScore").textContent = `Reactions: ${gameScore}`;
+            renderScienceExperiment();
           }
-          renderCarBuildingGame();
         }
       }
-    }
 
-    // IoT Smart Home Game
-    function startIoTSmartHome() {
-      currentGame = "iotSmartHome";
-      document.getElementById("gameContainer").style.display = "flex";
-      document.getElementById("gameTitle").textContent = "Smart Home Game";
-      document.getElementById("gameInstructions").textContent = "Click to control home devices! Watch the TV play YouTube! 📺";
-      gameScore = 0;
-      document.getElementById("gameScore").textContent = `Devices Controlled: ${gameScore}`;
-      smartHomeDevices = { fan: false, geyser: false, fridge: false, phone: false, tv: false };
-      playMusic("iotMusic");
-      renderIoTSmartHome();
-      gameCanvas.onclick = handleIoTSmartHomeClick;
-    }
-
-    function renderIoTSmartHome() {
-      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-      gameCtx.fillStyle = "#f0f0f0";
-      gameCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
-      const devices = ["fan", "geyser", "fridge", "phone", "tv"];
-      devices.forEach((device, i) => {
-        gameCtx.fillStyle = smartHomeDevices[device] ? "#ff66b2" : "#ff99cc";
-        gameCtx.fillRect(50 + i * 70, 300, 60, 40);
-        gameCtx.fillStyle = "white";
-        gameCtx.fillText(device, 55 + i * 70, 325);
-      });
-      gameCtx.fillStyle = "#d3d3d3";
-      gameCtx.fillRect(100, 50, 200, 150);
-      if (smartHomeDevices.tv) {
-        gameCtx.fillStyle = "red";
-        gameCtx.fillRect(120, 70, 160, 90);
-        gameCtx.fillStyle = "white";
-        gameCtx.fillText("YouTube", 160, 120);
-      }
-      devices.forEach((device, i) => {
-        if (smartHomeDevices[device]) {
-          gameCtx.font = "40px serif";
-          gameCtx.fillStyle = "black";
-          gameCtx.fillText(device === "fan" ? "🌀" : device === "geyser" ? "💧" : device === "fridge" ? "❄️" : device === "phone" ? "📱" : "📺", 150 + i * 30, 250);
-        }
-      });
-    }
-
-    function handleIoTSmartHomeClick(e) {
-      const { x, y } = getCanvasCoords(e, gameCanvas);
-      if (y >= 300 && y <= 340) {
-        const index = Math.floor((x - 50) / 70);
-        if (index >= 0 && index < 5) {
-          const device = ["fan", "geyser", "fridge", "phone", "tv"][index];
-          smartHomeDevices[device] = !smartHomeDevices[device];
-          gameScore++;
-          showRewardAnimation(device === "tv" ? "📺" : "🏠");
-          document.getElementById("gameScore").textContent = `Devices Controlled: ${gameScore}`;
-          renderIoTSmartHome();
-        }
-      }
-    }
-
-    // Science Quiz Game
-    function startScienceQuiz() {
-      currentGame = "scienceQuiz";
-      document.getElementById("gameContainer").style.display = "flex";
-      document.getElementById("gameTitle").textContent = "Science Quiz Game";
-      document.getElementById("gameInstructions").textContent = "Click the correct answer to earn points! 🌟";
-      gameScore = 0;
-      currentQuestion = 0;
-      document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
-      questions = [
-        { question: "What planet is known as the Red Planet?", answers: ["Mars", "Venus", "Jupiter"], correct: 0 },
-        { question: "What is the largest organ in the human body?", answers: ["Heart", "Skin", "Lung"], correct: 1 },
-        { question: "What force pulls objects to the ground?", answers: ["Magnetism", "Gravity", "Electricity"], correct: 1 }
-      ];
-      renderScienceQuiz();
-      gameCanvas.onclick = handleQuizAnswer;
-    }
-
-    function renderScienceQuiz() {
-      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-      if (currentQuestion >= questions.length) {
-        gameCtx.font = "30px Comic Sans MS";
-        gameCtx.fillStyle = "black";
-        gameCtx.fillText(`Game Over! Score: ${gameScore}`, 50, 200);
-        gameCanvas.onclick = null;
-        return;
-      }
-      const q = questions[currentQuestion];
-      gameCtx.font = "20px Comic Sans MS";
-      gameCtx.fillStyle = "black";
-      gameCtx.fillText(q.question, 50, 100);
-      for (let i = 0; i < q.answers.length; i++) {
-        gameCtx.fillStyle = "#ff66b2";
-        gameCtx.fillRect(50, 150 + i * 60, 300, 50);
-        gameCtx.fillStyle = "white";
-        gameCtx.fillText(q.answers[i], 60, 180 + i * 60);
-      }
-    }
-
-    function handleQuizAnswer(e) {
-      const { x, y } = getCanvasCoords(e, gameCanvas);
-      const q = questions[currentQuestion];
-      for (let i = 0; i < q.answers.length; i++) {
-        if (x >= 50 && x <= 350 && y >= 150 + i * 60 && y <= 200 + i * 60) {
-          if (i === q.correct) {
-            gameScore += 10;
-            showRewardAnimation();
-          } else {
-            gameScore = Math.max(0, gameScore - 2);
-          }
-          document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
-          currentQuestion++;
-          renderScienceQuiz();
-          break;
-        }
-      }
-    }
-
-    // Science Experiment Game
-    function startScienceExperiment() {
-      currentGame = "scienceExperiment";
-      document.getElementById("gameContainer").style.display = "flex";
-      document.getElementById("gameTitle").textContent = "Science Experiment Game";
-      document.getElementById("gameInstructions").textContent = "Click chemicals to mix them and see what happens! 🧪";
-      gameScore = 0;
-      document.getElementById("gameScore").textContent = `Reactions: ${gameScore}`;
-      experimentChemicals = [];
-      renderScienceExperiment();
-      gameCanvas.onclick = handleExperimentMix;
-    }
-
-    function renderScienceExperiment() {
-      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-      gameCtx.strokeStyle = "black";
-      gameCtx.lineWidth = 2;
-      gameCtx.beginPath();
-      gameCtx.moveTo(150, 100);
-      gameCtx.lineTo(150, 300);
-      gameCtx.lineTo(250, 300);
-      gameCtx.lineTo(250, 100);
-      gameCtx.stroke();
-      if (experimentChemicals.length > 0) {
-        const mixedColor = experimentChemicals.length === 2 ? mixColors(experimentChemicals[0], experimentChemicals[1]) : experimentChemicals[0];
-        gameCtx.fillStyle = mixedColor;
-        gameCtx.fillRect(150, 200, 100, 100);
-      }
-      const chemicals = ["#ff0000", "#00ff00", "#0000ff"];
-      for (let i = 0; i < chemicals.length; i++) {
-        gameCtx.fillStyle = chemicals[i];
-        gameCtx.fillRect(50 + i * 100, 320, 80, 40);
-      }
-    }
-
-    function mixColors(c1, c2) {
-      if ((c1 === "#ff0000" && c2 === "#00ff00") || (c1 === "#00ff00" && c2 === "#ff0000")) return "#ffff00";
-      if ((c1 === "#ff0000" && c2 === "#0000ff") || (c1 === "#0000ff" && c2 === "#ff0000")) return "#ff00ff";
-      if ((c1 === "#00ff00" && c2 === "#0000ff") || (c1 === "#0000ff" && c2 === "#00ff00")) return "#00ffff";
-      return c1;
-    }
-
-    function handleExperimentMix(e) {
-      const { x, y } = getCanvasCoords(e, gameCanvas);
-      if (y >= 320 && y <= 360) {
-        const index = Math.floor((x - 50) / 100);
-        if (index >= 0 && index < 3) {
-          experimentChemicals.push(["#ff0000", "#00ff00", "#0000ff"][index]);
-          if (experimentChemicals.length > 2) experimentChemicals.shift();
-          gameScore++;
-          showRewardAnimation("🧪");
-          document.getElementById("gameScore").textContent = `Reactions: ${gameScore}`;
-          renderScienceExperiment();
-        }
-      }
-    }
-
-    // Clock Time Game
-    function startClockTimeGame() {
-      currentGame = "clockTime";
-      document.getElementById("gameContainer").style.display = "flex";
-      document.getElementById("gameTitle").textContent = "Clock Time Game";
-      document.getElementById("gameInstructions").textContent = "Click to set the hour and minute hands to match the time! ⏰";
-      gameScore = 0;
-      document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
-      generateTargetTime();
-      clockHands = { hour: 0, minute: 0 };
-      renderClockTimeGame();
-      gameCanvas.onclick = handleClockTimeClick;
-    }
-
-    function generateTargetTime() {
-      const hours = [1, 3, 6, 9, 12];
-      const minutes = [0, 30];
-      targetTime = {
-        hour: hours[Math.floor(Math.random() * hours.length)],
-        minute: minutes[Math.floor(Math.random() * minutes.length)]
-      };
-    }
-
-    function renderClockTimeGame() {
-      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-      gameCtx.beginPath();
-      gameCtx.arc(200, 200, 150, 0, Math.PI * 2);
-      gameCtx.fillStyle = "#ffccff";
-      gameCtx.fill();
-      gameCtx.strokeStyle = "black";
-      gameCtx.lineWidth = 5;
-      gameCtx.stroke();
-      gameCtx.font = "20px Comic Sans MS";
-      gameCtx.fillStyle = "black";
-      for (let i = 1; i <= 12; i++) {
-        const angle = (i * 30 - 90) * Math.PI / 180;
-        gameCtx.fillText(i, 200 + Math.cos(angle) * 120 - 10, 200 + Math.sin(angle) * 120 + 10);
-      }
-      const hourAngle = (clockHands.hour % 12 * 30 + clockHands.minute / 2 - 90) * Math.PI / 180;
-      gameCtx.beginPath();
-      gameCtx.moveTo(200, 200);
-      gameCtx.lineTo(200 + Math.cos(hourAngle) * 80, 200 + Math.sin(hourAngle) * 80);
-      gameCtx.strokeStyle = "black";
-      gameCtx.lineWidth = 8;
-      gameCtx.stroke();
-      const minuteAngle = (clockHands.minute * 6 - 90) * Math.PI / 180;
-      gameCtx.beginPath();
-      gameCtx.moveTo(200, 200);
-      gameCtx.lineTo(200 + Math.cos(minuteAngle) * 120, 200 + Math.sin(minuteAngle) * 120);
-      gameCtx.strokeStyle = "black";
-      gameCtx.lineWidth = 4;
-      gameCtx.stroke();
-      gameCtx.font = "20px Comic Sans MS";
-      gameCtx.fillStyle = "black";
-      const timeString = `${targetTime.hour}:${targetTime.minute === 0 ? '00' : '30'}`;
-      gameCtx.fillText(`Set the clock to ${timeString}`, 50, 50);
-      gameCtx.fillStyle = "#ff66b2";
-      gameCtx.fillRect(50, 320, 80, 40);
-      gameCtx.fillRect(150, 320, 80, 40);
-      gameCtx.fillStyle = "white";
-      gameCtx.fillText("Hour +1", 60, 345);
-      gameCtx.fillText("Minute +30", 160, 345);
-    }
-
-    function handleClockTimeClick(e) {
-      const { x, y } = getCanvasCoords(e, gameCanvas);
-      if (y >= 320 && y <= 360) {
-        if (x >= 50 && x <= 130) {
-          clockHands.hour = (clockHands.hour + 1) % 12;
-        } else if (x >= 150 && x <= 230) {
-          clockHands.minute = (clockHands.minute + 30) % 60;
-        }
+      // Clock Time Game
+      window.startClockTimeGame = function() {
+        currentGame = "clockTime";
+        document.getElementById("gameContainer").style.display = "flex";
+        document.getElementById("gameTitle").textContent = "Clock Time Game";
+        document.getElementById("gameInstructions").textContent = "Click to set the hour and minute hands to match the time! ⏰";
+        gameScore = 0;
+        document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
+        generateTargetTime();
+        clockHands = { hour: 0, minute: 0 };
         renderClockTimeGame();
-        if (clockHands.hour === targetTime.hour && clockHands.minute === targetTime.minute) {
-          gameScore += 10;
-          showRewardAnimation("⏰");
-          document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
-          generateTargetTime();
-          clockHands = { hour: 0, minute: 0 };
-          renderClockTimeGame();
-        }
+        gameCanvas.onclick = handleClockTimeClick;
+      };
+
+      function generateTargetTime() {
+        const hours = [1, 3, 6, 9, 12];
+        const minutes = [0, 30];
+        targetTime = {
+          hour: hours[Math.floor(Math.random() * hours.length)],
+          minute: minutes[Math.floor(Math.random() * minutes.length)]
+        };
       }
-    }
 
-    // Shopkeeper Money Game
-    function startShopkeeperMoneyGame() {
-      currentGame = "shopkeeperMoney";
-      document.getElementById("gameContainer").style.display = "flex";
-      document.getElementById("gameTitle").textContent = "Shopkeeper Money Game";
-      document.getElementById("gameInstructions").textContent = "Click the money to pay the shopkeeper! 💸";
-      gameScore = 0;
-      document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
-      generateShopItem();
-      renderShopkeeperMoneyGame();
-      gameCanvas.onclick = handleShopkeeperMoneyClick;
-    }
-
-    function generateShopItem() {
-      const items = [
-        { name: "Candy 🍬", price: 2 },
-        { name: "Toy 🧸", price: 3 },
-        { name: "Balloon 🎈", price: 1 }
-      ];
-      shopItem = items[Math.floor(Math.random() * items.length)];
-      moneyOptions = [1, 2, 3].sort(() => Math.random() - 0.5);
-    }
-
-    function renderShopkeeperMoneyGame() {
-      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-      gameCtx.fillStyle = "#ffccff";
-      gameCtx.fillRect(0, 0, 400, 400);
-      gameCtx.font = "60px serif";
-      gameCtx.fillStyle = "black";
-      gameCtx.fillText("😺", 50, 100);
-      gameCtx.fillStyle = "white";
-      gameCtx.fillRect(100, 50, 250, 80);
-      gameCtx.strokeStyle = "black";
-      gameCtx.lineWidth = 2;
-      gameCtx.strokeRect(100, 50, 250, 80);
-      gameCtx.font = "20px Comic Sans MS";
-      gameCtx.fillStyle = "black";
-      gameCtx.fillText(`Hello! ${shopItem.name} costs $${shopItem.price}!`, 110, 90);
-      for (let i = 0; i < moneyOptions.length; i++) {
+      function renderClockTimeGame() {
+        gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+        gameCtx.beginPath();
+        gameCtx.arc(200, 200, 150, 0, Math.PI * 2);
+        gameCtx.fillStyle = "#ffccff";
+        gameCtx.fill();
+        gameCtx.strokeStyle = "black";
+        gameCtx.lineWidth = 5;
+        gameCtx.stroke();
+        gameCtx.font = "20px Comic Sans MS";
+        gameCtx.fillStyle = "black";
+        for (let i = 1; i <= 12; i++) {
+          const angle = (i * 30 - 90) * Math.PI / 180;
+          gameCtx.fillText(i, 200 + Math.cos(angle) * 120 - 10, 200 + Math.sin(angle) * 120 + 10);
+        }
+        const hourAngle = (clockHands.hour % 12 * 30 + clockHands.minute / 2 - 90) * Math.PI / 180;
+        gameCtx.beginPath();
+        gameCtx.moveTo(200, 200);
+        gameCtx.lineTo(200 + Math.cos(hourAngle) * 80, 200 + Math.sin(hourAngle) * 80);
+        gameCtx.strokeStyle = "black";
+        gameCtx.lineWidth = 8;
+        gameCtx.stroke();
+        const minuteAngle = (clockHands.minute * 6 - 90) * Math.PI / 180;
+        gameCtx.beginPath();
+        gameCtx.moveTo(200, 200);
+        gameCtx.lineTo(200 + Math.cos(minuteAngle) * 120, 200 + Math.sin(minuteAngle) * 120);
+        gameCtx.strokeStyle = "black";
+        gameCtx.lineWidth = 4;
+        gameCtx.stroke();
+        gameCtx.font = "20px Comic Sans MS";
+        gameCtx.fillStyle = "black";
+        const timeString = `${targetTime.hour}:${targetTime.minute === 0 ? '00' : '30'}`;
+        gameCtx.fillText(`Set the clock to ${timeString}`, 50, 50);
         gameCtx.fillStyle = "#ff66b2";
-        gameCtx.fillRect(50 + i * 100, 320, 80, 40);
+        gameCtx.fillRect(50, 320, 80, 40);
+        gameCtx.fillRect(150, 320, 80, 40);
         gameCtx.fillStyle = "white";
-        gameCtx.fillText(`$${moneyOptions[i]}`, 70 + i * 100, 345);
+        gameCtx.fillText("Hour +1", 60, 345);
+        gameCtx.fillText("Minute +30", 160, 345);
       }
-    }
 
-    function handleShopkeeperMoneyClick(e) {
-      const { x, y } = getCanvasCoords(e, gameCanvas);
-      if (y >= 320 && y <= 360) {
-        const index = Math.floor((x - 50) / 100);
-        if (index >= 0 && index < 3) {
-          if (moneyOptions[index] === shopItem.price) {
+      function handleClockTimeClick(e) {
+        const { x, y } = getCanvasCoords(e, gameCanvas);
+        if (y >= 320 && y <= 360) {
+          if (x >= 50 && x <= 130) {
+            clockHands.hour = (clockHands.hour + 1) % 12;
+          } else if (x >= 150 && x <= 230) {
+            clockHands.minute = (clockHands.minute + 30) % 60;
+          }
+          renderClockTimeGame();
+          if (clockHands.hour === targetTime.hour && clockHands.minute === targetTime.minute) {
             gameScore += 10;
-            showRewardAnimation("💸");
+            showRewardAnimation("⏰");
             document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
-            generateShopItem();
-            renderShopkeeperMoneyGame();
-          } else {
-            gameScore = Math.max(0, gameScore - 2);
-            document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
+            generateTargetTime();
+            clockHands = { hour: 0, minute: 0 };
+            renderClockTimeGame();
           }
         }
       }
-    }
 
-    // Tutorial
-    function showStepByStep(type) {
-      document.getElementById("gameContainer").style.display = "flex";
-      document.getElementById("gameTitle").textContent = `Learn to Draw a ${type.charAt(0).toUpperCase() + type.slice(1)}`;
-      document.getElementById("gameInstructions").textContent = "Click to see the next step! ✏️";
-      document.getElementById("gameScore").textContent = "";
-      const steps = {
-        cat: [
-          () => {
-            gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-            gameCtx.beginPath();
-            gameCtx.arc(200, 200, 80, 0, Math.PI * 2);
-            gameCtx.stroke();
-            gameCtx.fillText("Step 1: Draw a circle", 50, 350);
-          },
-          () => {
-            gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-            gameCtx.beginPath();
-            gameCtx.arc(200, 200, 80, 0, Math.PI * 2);
-            gameCtx.stroke();
-            gameCtx.beginPath();
-            gameCtx.moveTo(160, 120);
-            gameCtx.lineTo(140, 80);
-            gameCtx.lineTo(180, 100);
-            gameCtx.closePath();
-            gameCtx.stroke();
-            gameCtx.beginPath();
-            gameCtx.moveTo(240, 120);
-            gameCtx.lineTo(260, 80);
-            gameCtx.lineTo(220, 100);
-            gameCtx.closePath();
-            gameCtx.stroke();
-            gameCtx.fillText("Step 2: Add ears", 50, 350);
-          },
-          () => {
-            gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-            gameCtx.beginPath();
-            gameCtx.arc(200, 200, 80, 0, Math.PI * 2);
-            gameCtx.stroke();
-            gameCtx.beginPath();
-            gameCtx.moveTo(160, 120);
-            gameCtx.lineTo(140, 80);
-            gameCtx.lineTo(180, 100);
-            gameCtx.closePath();
-            gameCtx.stroke();
-            gameCtx.beginPath();
-            gameCtx.moveTo(240, 120);
-            gameCtx.lineTo(260, 80);
-            gameCtx.lineTo(220, 100);
-            gameCtx.closePath();
-            gameCtx.stroke();
-            gameCtx.beginPath();
-            gameCtx.arc(180, 180, 5, 0, Math.PI * 2);
-            gameCtx.fill();
-            gameCtx.beginPath();
-            gameCtx.arc(220, 180, 5, 0, Math.PI * 2);
-            gameCtx.fill();
-            gameCtx.fillText("Step 3: Add eyes", 50, 350);
-          }
-        ],
-        flower: [
-          () => {
-            gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-            gameCtx.beginPath();
-            gameCtx.arc(200, 200, 20, 0, Math.PI * 2);
-            gameCtx.stroke();
-            gameCtx.fillText("Step 1: Draw a circle", 50, 350);
-          },
-          () => {
-            gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-            gameCtx.beginPath();
-            gameCtx.arc(200, 200, 20, 0, Math.PI * 2);
-            gameCtx.stroke();
-            for (let i = 0; i < 4; i++) {
-              const angle = (i / 4) * Math.PI * 2;
-              gameCtx.beginPath();
-              gameCtx.ellipse(200 + Math.cos(angle) * 40, 200 + Math.sin(angle) * 40, 10, 20, angle, 0, Math.PI * 2);
-              gameCtx.stroke();
-            }
-            gameCtx.fillText("Step 2: Add petals", 50, 350);
-          },
-          () => {
-            gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-            gameCtx.beginPath();
-            gameCtx.arc(200, 200, 20, 0, Math.PI * 2);
-            gameCtx.stroke();
-            for (let i = 0; i < 4; i++) {
-              const angle = (i / 4) * Math.PI * 2;
-              gameCtx.beginPath();
-              gameCtx.ellipse(200 + Math.cos(angle) * 40, 200 + Math.sin(angle) * 40, 10, 20, angle, 0, Math.PI * 2);
-              gameCtx.stroke();
-            }
-            gameCtx.beginPath();
-            gameCtx.moveTo(200, 220);
-            gameCtx.lineTo(200, 300);
-            gameCtx.stroke();
-            gameCtx.fillText("Step 3: Add stem", 50, 350);
-          }
-        ]
+      // Shopkeeper Money Game
+      window.startShopkeeperMoneyGame = function() {
+        currentGame = "shopkeeperMoney";
+        document.getElementById("gameContainer").style.display = "flex";
+        document.getElementById("gameTitle").textContent = "Shopkeeper Money Game";
+        document.getElementById("gameInstructions").textContent = "Click the money to pay the shopkeeper! 💸";
+        gameScore = 0;
+        document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
+        generateShopItem();
+        renderShopkeeperMoneyGame();
+        gameCanvas.onclick = handleShopkeeperMoneyClick;
       };
-      let currentStep = 0;
-      steps[type][currentStep]();
-      gameCanvas.onclick = () => {
-        currentStep = (currentStep + 1) % steps[type].length;
+
+      function generateShopItem() {
+        const items = [
+          { name: "Candy 🍬", price: 2 },
+          { name: "Toy 🧸", price: 3 },
+          { name: "Balloon 🎈", price: 1 }
+        ];
+        shopItem = items[Math.floor(Math.random() * items.length)];
+        moneyOptions = [1, 2, 3].sort(() => Math.random() - 0.5);
+      }
+
+      function renderShopkeeperMoneyGame() {
+        gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+        gameCtx.fillStyle = "#ffccff";
+        gameCtx.fillRect(0, 0, 400, 400);
+        gameCtx.font = "60px serif";
+        gameCtx.fillStyle = "black";
+        gameCtx.fillText("😺", 50, 100);
+        gameCtx.fillStyle = "white";
+        gameCtx.fillRect(100, 50, 250, 80);
+        gameCtx.strokeStyle = "black";
+        gameCtx.lineWidth = 2;
+        gameCtx.strokeRect(100, 50, 250, 80);
+        gameCtx.font = "20px Comic Sans MS";
+        gameCtx.fillStyle = "black";
+        gameCtx.fillText(`Hello! ${shopItem.name} costs $${shopItem.price}!`, 110, 90);
+        for (let i = 0; i < moneyOptions.length; i++) {
+          gameCtx.fillStyle = "#ff66b2";
+          gameCtx.fillRect(50 + i * 100, 320, 80, 40);
+          gameCtx.fillStyle = "white";
+          gameCtx.fillText(`$${moneyOptions[i]}`, 70 + i * 100, 345);
+        }
+      }
+
+      function handleShopkeeperMoneyClick(e) {
+        const { x, y } = getCanvasCoords(e, gameCanvas);
+        if (y >= 320 && y <= 360) {
+          const index = Math.floor((x - 50) / 100);
+          if (index >= 0 && index < 3) {
+            if (moneyOptions[index] === shopItem.price) {
+              gameScore += 10;
+              showRewardAnimation("💸");
+              document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
+              generateShopItem();
+              renderShopkeeperMoneyGame();
+            } else {
+              gameScore = Math.max(0, gameScore - 2);
+              document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
+            }
+          }
+        }
+      }
+
+      // Tutorial
+      window.showStepByStep = function(type) {
+        document.getElementById("gameContainer").style.display = "flex";
+        document.getElementById("gameTitle").textContent = `Learn to Draw a ${type.charAt(0).toUpperCase() + type.slice(1)}`;
+        document.getElementById("gameInstructions").textContent = "Click to see the next step! ✏️";
+        document.getElementById("gameScore").textContent = "";
+        const steps = {
+          cat: [
+            () => {
+              gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+              gameCtx.beginPath();
+              gameCtx.arc(200, 200, 80, 0, Math.PI * 2);
+              gameCtx.stroke();
+              gameCtx.fillText("Step 1: Draw a circle", 50, 350);
+            },
+            () => {
+              gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+              gameCtx.beginPath();
+              gameCtx.arc(200, 200, 80, 0, Math.PI * 2);
+              gameCtx.stroke();
+              gameCtx.beginPath();
+              gameCtx.moveTo(160, 120);
+              gameCtx.lineTo(140, 80);
+              gameCtx.lineTo(180, 100);
+              gameCtx.closePath();
+              gameCtx.stroke();
+              gameCtx.beginPath();
+              gameCtx.moveTo(240, 120);
+              gameCtx.lineTo(260, 80);
+              gameCtx.lineTo(220, 100);
+              gameCtx.closePath();
+              gameCtx.stroke();
+              gameCtx.fillText("Step 2: Add ears", 50, 350);
+            },
+            () => {
+              gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+              gameCtx.beginPath();
+              gameCtx.arc(200, 200, 80, 0, Math.PI * 2);
+              gameCtx.stroke();
+              gameCtx.beginPath();
+              gameCtx.moveTo(160, 120);
+              gameCtx.lineTo(140, 80);
+              gameCtx.lineTo(180, 100);
+              gameCtx.closePath();
+              gameCtx.stroke();
+              gameCtx.beginPath();
+              gameCtx.moveTo(240, 120);
+              gameCtx.lineTo(260, 80);
+              gameCtx.lineTo(220, 100);
+              gameCtx.closePath();
+              gameCtx.stroke();
+              gameCtx.beginPath();
+              gameCtx.arc(180, 180, 5, 0, Math.PI * 2);
+              gameCtx.fill();
+              gameCtx.beginPath();
+              gameCtx.arc(220, 180, 5, 0, Math.PI * 2);
+              gameCtx.fill();
+              gameCtx.fillText("Step 3: Add eyes", 50, 350);
+            }
+          ],
+          flower: [
+            () => {
+              gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+              gameCtx.beginPath();
+              gameCtx.arc(200, 200, 20, 0, Math.PI * 2);
+              gameCtx.stroke();
+              gameCtx.fillText("Step 1: Draw a circle", 50, 350);
+            },
+            () => {
+              gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+              gameCtx.beginPath();
+              gameCtx.arc(200, 200, 20, 0, Math.PI * 2);
+              gameCtx.stroke();
+              for (let i = 0; i < 4; i++) {
+                const angle = (i / 4) * Math.PI * 2;
+                gameCtx.beginPath();
+                gameCtx.ellipse(200 + Math.cos(angle) * 40, 200 + Math.sin(angle) * 40, 10, 20, angle, 0, Math.PI * 2);
+                gameCtx.stroke();
+              }
+              gameCtx.fillText("Step 2: Add petals", 50, 350);
+            },
+            () => {
+              gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+              gameCtx.beginPath();
+              gameCtx.arc(200, 200, 20, 0, Math.PI * 2);
+              gameCtx.stroke();
+              for (let i = 0; i < 4; i++) {
+                const angle = (i / 4) * Math.PI * 2;
+                gameCtx.beginPath();
+                gameCtx.ellipse(200 + Math.cos(angle) * 40, 200 + Math.sin(angle) * 40, 10, 20, angle, 0, Math.PI * 2);
+                gameCtx.stroke();
+              }
+              gameCtx.beginPath();
+              gameCtx.moveTo(200, 220);
+              gameCtx.lineTo(200, 300);
+              gameCtx.stroke();
+              gameCtx.fillText("Step 3: Add stem", 50, 350);
+            }
+          ]
+        };
+        let currentStep = 0;
         steps[type][currentStep]();
+        gameCanvas.onclick = () => {
+          currentStep = (currentStep + 1) % steps[type].length;
+          steps[type][currentStep]();
+        };
       };
-    }
+    });
   </script>
 </body>
 </html>
