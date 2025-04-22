@@ -8,7 +8,7 @@
   <style>
     body {
       font-family: 'Comic Sans MS', cursive, sans-serif;
-      background: linear-gradient(to bottom right, #ffe4f1, #ffc1e3);
+      background: linear-gradient(to bottom right, #ffccff, #ff99cc);
       text-align: center;
       padding: 30px;
       color: #d63384;
@@ -17,8 +17,8 @@
     }
 
     h1 {
-      font-size: 40px;
-      color: #ff4da6;
+      font-size: 48px;
+      color: #ff3399;
       text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.8);
       margin-top: 0;
     }
@@ -32,33 +32,35 @@
     }
 
     .section {
-      background: rgba(255, 230, 240, 0.8);
-      padding: 15px;
+      background: rgba(255, 230, 240, 0.9);
+      padding: 20px;
       border-radius: 15px;
       box-shadow: 0 4px 6px rgba(255, 138, 198, 0.5);
-      min-width: 200px;
+      min-width: 220px;
     }
 
     .section h3 {
       margin-bottom: 10px;
       margin-top: 0;
       color: #ff3399;
+      font-size: 24px;
     }
 
     button, select, input[type="text"], input[type="color"] {
       font-family: inherit;
-      background: #ffb3d9;
+      background: #ff99cc;
       border: none;
-      padding: 8px 12px;
+      padding: 12px 16px;
       margin: 5px;
-      border-radius: 8px;
+      border-radius: 10px;
       box-shadow: 2px 2px 0 #ff5caa;
       cursor: pointer;
+      font-size: 18px;
       transition: all 0.2s;
     }
 
     button:hover, select:hover {
-      background: #ff99cc;
+      background: #ff66b2;
       transform: translateY(-2px);
     }
 
@@ -68,7 +70,7 @@
 
     #canvas {
       border: 4px dotted #fff;
-      background: white; /* Set canvas background to white */
+      background: white;
       margin-top: 20px;
       border-radius: 12px;
       cursor: crosshair;
@@ -77,7 +79,7 @@
 
     footer {
       margin-top: 30px;
-      font-size: 16px;
+      font-size: 18px;
       color: #aa1166;
     }
 
@@ -115,9 +117,10 @@
       background: #ff5caa;
       color: white;
       border: none;
-      padding: 8px 15px;
-      border-radius: 8px;
+      padding: 12px 20px;
+      border-radius: 10px;
       margin-top: 10px;
+      font-size: 18px;
     }
 
     .sticker-palette {
@@ -131,7 +134,7 @@
     }
 
     .sticker {
-      font-size: 30px;
+      font-size: 40px;
       cursor: pointer;
       margin: 5px;
       display: inline-block;
@@ -148,11 +151,12 @@
     }
 
     .tab {
-      padding: 8px 15px;
-      background: #ffb3d9;
-      border-radius: 8px 8px 0 0;
+      padding: 12px 20px;
+      background: #ff99cc;
+      border-radius: 10px 10px 0 0;
       margin: 0 5px;
       cursor: pointer;
+      font-size: 20px;
     }
 
     .tab.active {
@@ -175,6 +179,12 @@
       margin-top: 10px;
     }
 
+    .prompt-container {
+      margin: 10px auto;
+      font-size: 20px;
+      color: #ff3399;
+    }
+
     @media (max-width: 768px) {
       .toolbox {
         flex-direction: column;
@@ -185,8 +195,26 @@
         height: auto;
       }
       h1 {
-        font-size: 30px;
+        font-size: 36px;
       }
+      button, select, input {
+        font-size: 16px;
+        padding: 10px 14px;
+      }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .reward-animation {
+      font-size: 60px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: bounce 0.5s 3;
     }
   </style>
 </head>
@@ -200,60 +228,59 @@
   </div>
 
   <div id="drawing-tab" class="content-area active">
+    <div class="prompt-container" id="drawingPrompt">Click "New Prompt" for a fun drawing idea!</div>
     <div class="toolbox">
       <div class="section">
         <h3>Brush Tools:</h3>
-        <select id="brushType">
+        <select id="brushType" title="Choose your drawing tool">
           <option value="crayon">Crayon</option>
           <option value="marker">Marker</option>
           <option value="pencil">Pencil</option>
           <option value="spray">Spray</option>
         </select>
         <h3>Color:</h3>
-        <input type="color" id="colorPicker" value="#ff1493"/>
+        <input type="color" id="colorPicker" value="#ff1493" title="Pick a color"/>
         <h3>Size: <span id="sizeValue">5</span></h3>
-        <input type="range" id="sizeSlider" min="1" max="30" value="5"/>
+        <input type="range" id="sizeSlider" min="1" max="30" value="5" title="Adjust brush size"/>
       </div>
 
       <div class="section">
         <h3>Shapes:</h3>
-        <button onclick="drawShape('circle')">⭕ Circle</button>
-        <button onclick="drawShape('square')">⬛ Square</button>
-        <button onclick="drawShape('line')">📏 Line</button>
-        <button onclick="drawShape('triangle')">🔺 Triangle</button>
-        <button onclick="drawShape('star')">⭐ Star</button>
-        <button onclick="drawShape('heart')">❤️ Heart</button>
+        <button onclick="drawShape('circle')" title="Draw a circle">⭕ Circle</button>
+        <button onclick="drawShape('square')" title="Draw a square">⬛ Square</button>
+        <button onclick="drawShape('triangle')" title="Draw a triangle">🔺 Triangle</button>
+        <button onclick="drawShape('star')" title="Draw a star">⭐ Star</button>
       </div>
 
       <div class="section">
         <h3>Stickers & Text:</h3>
-        <button onclick="showStickers()">🎀 Stickers</button>
-        <button onclick="stampEmoji('😺')">😺 Kitty</button>
-        <button onclick="stampEmoji('🌸')">🌸 Flower</button>
+        <button onclick="showStickers()" title="Choose a sticker">🎀 Stickers</button>
+        <button onclick="stampEmoji('😺')" title="Add a kitty sticker">😺 Kitty</button>
+        <button onclick="stampEmoji('🌸')" title="Add a flower sticker">🌸 Flower</button>
         <h3>Your Name:</h3>
-        <input type="text" id="nameInput" placeholder="Enter your name"/>
-        <button onclick="addName()">Add Name</button>
+        <input type="text" id="nameInput" placeholder="Enter your name" title="Type your name"/>
+        <button onclick="addName()" title="Add your name to the canvas">Add Name</button>
       </div>
 
       <div class="section">
         <h3>Canvas Tools:</h3>
-        <button onclick="toggleEraser()">🧽 Eraser</button>
-        <button onclick="clearCanvas()">🗑️ Clear</button>
-        <button onclick="fillCanvas()">🎨 Fill Color</button>
+        <button onclick="toggleEraser()" title="Switch to eraser">🧽 Eraser</button>
+        <button onclick="clearCanvas()" title="Clear the canvas">🗑️ Clear</button>
+        <button onclick="fillCanvas()" title="Fill with color">🎨 Fill</button>
         <div class="undo-redo">
-          <button onclick="undo()">↩️ Undo</button>
-          <button onclick="redo()">↪️ Redo</button>
+          <button onclick="undo()" title="Undo last action">↩️ Undo</button>
+          <button onclick="redo()" title="Redo last action">↪️ Redo</button>
         </div>
       </div>
 
       <div class="section">
         <h3>Save & Share:</h3>
-        <button onclick="saveImage('png')">💾 Save PNG</button>
-        <button onclick="saveImage('jpeg')">📷 Save JPEG</button>
-        <button onclick="saveImage('pdf')">📄 Save PDF</button>
-        <button onclick="printCanvas()">🖨️ Print</button>
+        <button onclick="saveImage('png')" title="Save as PNG">💾 Save PNG</button>
+        <button onclick="saveImage('jpeg')" title="Save as JPEG">📷 Save JPEG</button>
+        <button onclick="saveImage('pdf')" title="Save as PDF">📄 Save PDF</button>
+        <button onclick="printCanvas()" title="Print your drawing">🖨️ Print</button>
         <h3>Background:</h3>
-        <select onchange="changeTheme(this.value)">
+        <select onchange="changeTheme(this.value)" title="Change canvas background">
           <option value="white">White</option>
           <option value="pink">Pink</option>
           <option value="sky">Sky Blue</option>
@@ -262,16 +289,10 @@
       </div>
 
       <div class="section">
-        <h3>Fun Presets:</h3>
-        <select id="presetSelect" onchange="loadPreset()">
-          <option value="">--Choose--</option>
-          <option value="rainbow">🌈 Rainbow</option>
-          <option value="kitty">🐱 Hello Kitty</option>
-          <option value="house">🏠 House</option>
-          <option value="sunset">🌅 Sunset</option>
-        </select>
-        <button onclick="startColoringBook()">🖍️ Coloring Book</button>
-        <button onclick="startConnectDots()">🔢 Connect Dots</button>
+        <h3>Fun Activities:</h3>
+        <button onclick="generateDrawingPrompt()" title="Get a new drawing idea">✨ New Prompt</button>
+        <button onclick="startColoringBook()" title="Color a picture">🖍️ Coloring Book</button>
+        <button onclick="startConnectDots()" title="Connect the dots">🔢 Connect Dots</button>
       </div>
     </div>
 
@@ -281,9 +302,12 @@
   <div id="games-tab" class="content-area">
     <div class="section" style="max-width: 600px; margin: 0 auto;">
       <h2>🎮 Fun Games 🎮</h2>
-      <button onclick="startMemoryGame()">🧠 Memory Match Game</button>
-      <button onclick="startGuessingGame()">🎨 Color Guessing Game</button>
-      <button onclick="startDrawingGame()">✏️ Drawing Challenge</button>
+      <button onclick="startMemoryGame()" title="Match the cards">🧠 Memory Match</button>
+      <button onclick="startGuessingGame()" title="Guess the color">🎨 Color Guess</button>
+      <button onclick="startDrawingGame()" title="Draw a challenge">✏️ Draw Challenge</button>
+      <button onclick="startScienceQuiz()" title="Answer science questions">🔬 Science Quiz</button>
+      <button onclick="startBarbieDressUp()" title="Design Barbie's outfit">👗 Barbie Dress-Up</button>
+      <button onclick="startScienceExperiment()" title="Mix chemicals">🧪 Science Experiment</button>
     </div>
   </div>
 
@@ -292,53 +316,43 @@
       <h2>✏️ Learn to Draw ✏️</h2>
       <div id="tutorial-steps">
         <h3>Let's draw a cute cat!</h3>
-        <ol style="text-align: left;">
+        <ol style="text-align: left; font-size: 18px;">
           <li>Draw a circle for the head</li>
           <li>Add two triangle ears on top</li>
-          <li>Draw two dots for eyes and a small triangle for the nose</li>
-          <li>Add whiskers with short lines</li>
-          <li>Draw a smiling mouth</li>
+          <li>Draw two dots for eyes</li>
         </ol>
-        <button onclick="showStepByStep('cat')">Show Me How</button>
+        <button onclick="showStepByStep('cat')" title="See how to draw a cat">Show Me How</button>
         
         <h3 style="margin-top: 20px;">Let's draw a flower!</h3>
-        <ol style="text-align: left;">
+        <ol style="text-align: left; font-size: 18px;">
           <li>Draw a small circle in the center</li>
-          <li>Add petals around it (like a sun)</li>
-          <li>Draw a stem with two lines</li>
-          <li>Add leaves on the sides</li>
+          <li>Add petals around it</li>
+          <li>Draw a stem</li>
         </ol>
-        <button onclick="showStepByStep('flower')">Show Me How</button>
+        <button onclick="showStepByStep('flower')" title="See how to draw a flower">Show Me How</button>
       </div>
     </div>
   </div>
 
   <div class="sticker-palette" id="stickerPalette">
-    <div class="sticker" onclick="stampEmoji('😺')">😺</div>
-    <div class="sticker" onclick="stampEmoji('🐶')">🐶</div>
-    <div class="sticker" onclick="stampEmoji('🐰')">🐰</div>
-    <div class="sticker" onclick="stampEmoji('🐻')">🐻</div>
-    <div class="sticker" onclick="stampEmoji('🌸')">🌸</div>
-    <div class="sticker" onclick="stampEmoji('🌼')">🌼</div>
-    <div class="sticker" onclick="stampEmoji('⭐')">⭐</div>
-    <div class="sticker" onclick="stampEmoji('🌈')">🌈</div>
-    <div class="sticker" onclick="stampEmoji('🍎')">🍎</div>
-    <div class="sticker" onclick="stampEmoji('🍭')">🍭</div>
-    <div class="sticker" onclick="stampEmoji('🎀')">🎀</div>
-    <div class="sticker" onclick="stampEmoji('🎈')">🎈</div>
+    <div class="sticker" onclick="stampEmoji('😺')" title="Kitty sticker">😺</div>
+    <div class="sticker" onclick="stampEmoji('🐶')" title="Puppy sticker">🐶</div>
+    <div class="sticker" onclick="stampEmoji('🌸')" title="Flower sticker">🌸</div>
+    <div class="sticker" onclick="stampEmoji('⭐')" title="Star sticker">⭐</div>
+    <div class="sticker" onclick="stampEmoji('🎀')" title="Bow sticker">🎀</div>
   </div>
 
   <div class="game-container" id="gameContainer">
     <div class="game-window">
       <h2 id="gameTitle">Game</h2>
       <canvas class="game-canvas" id="gameCanvas" width="400" height="400"></canvas>
-      <div id="gameInstructions" style="margin: 10px 0;"></div>
-      <div id="gameScore" style="font-weight: bold; margin: 10px 0;"></div>
-      <button class="close-game" onclick="closeGame()">Close Game</button>
+      <div id="gameInstructions" style="margin: 10px 0; font-size: 18px;"></div>
+      <div id="gameScore" style="font-weight: bold; margin: 10px 0; font-size: 18px;"></div>
+      <button class="close-game" onclick="closeGame()" title="Close the game">Close Game</button>
     </div>
   </div>
 
-  <footer>Made with ❤️ analizzare | © 2023 DrawHelloKitty</footer>
+  <footer>Made with ❤️ by Nakshu | © 2023 DrawHelloKitty</footer>
 
   <script>
     // Canvas setup
@@ -372,6 +386,10 @@
     let drawingChallengeWord = "";
     let drawingChallengeTimer = null;
     let timeLeft = 30;
+    let currentQuestion = 0;
+    let questions = [];
+    let barbieOutfit = { dressColor: "#ff66b2", pattern: "none" };
+    let experimentChemicals = [];
 
     // Initialize
     document.getElementById("colorPicker").value = brushColor;
@@ -435,14 +453,11 @@
 
     function draw(e) {
       if (!drawing) return;
-      
       const rect = canvas.getBoundingClientRect();
       const x = (e.clientX || e.touches[0].clientX) - rect.left;
       const y = (e.clientY || e.touches[0].clientY) - rect.top;
-      
       ctx.lineJoin = "round";
       ctx.lineCap = "round";
-      
       if (isEraser) {
         ctx.globalCompositeOperation = "destination-out";
         ctx.strokeStyle = "rgba(0,0,0,1)";
@@ -451,9 +466,7 @@
         ctx.strokeStyle = brushColor;
         ctx.fillStyle = brushColor;
       }
-      
       ctx.lineWidth = brushSize;
-      
       switch(currentBrush) {
         case "crayon":
           drawCrayon(x, y);
@@ -547,13 +560,10 @@
       ctx.fillStyle = brushColor;
       ctx.strokeStyle = brushColor;
       ctx.lineWidth = brushSize;
-      
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
       const size = Math.min(canvas.width, canvas.height) * 0.3;
-      
       ctx.beginPath();
-      
       switch(shape) {
         case "circle":
           ctx.arc(centerX, centerY, size/2, 0, Math.PI * 2);
@@ -562,11 +572,6 @@
         case "square":
           ctx.rect(centerX - size/2, centerY - size/2, size, size);
           ctx.fill();
-          break;
-        case "line":
-          ctx.moveTo(centerX - size/2, centerY);
-          ctx.lineTo(centerX + size/2, centerY);
-          ctx.stroke();
           break;
         case "triangle":
           ctx.moveTo(centerX, centerY - size/2);
@@ -579,10 +584,6 @@
           drawStar(centerX, centerY, 5, size/2, size/4);
           ctx.fill();
           break;
-        case "heart":
-          drawHeart(centerX, centerY, size/2);
-          ctx.fill();
-          break;
       }
     }
 
@@ -591,10 +592,8 @@
       let x = cx;
       let y = cy;
       let step = Math.PI / spikes;
-
       ctx.beginPath();
       ctx.moveTo(cx, cy - outerRadius);
-      
       for(let i = 0; i < spikes; i++) {
         x = cx + Math.cos(rot) * outerRadius;
         y = cy + Math.sin(rot) * outerRadius;
@@ -605,18 +604,7 @@
         ctx.lineTo(x, y);
         rot += step;
       }
-      
       ctx.lineTo(cx, cy - outerRadius);
-      ctx.closePath();
-    }
-
-    function drawHeart(x, y, size) {
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-      ctx.bezierCurveTo(x, y - size/2, x - size, y - size/2, x - size, y);
-      ctx.bezierCurveTo(x - size, y + size/3, x, y + size, x, y + size);
-      ctx.bezierCurveTo(x, y + size, x + size, y + size/3, x + size, y);
-      ctx.bezierCurveTo(x + size, y - size/2, x, y - size/2, x, y);
       ctx.closePath();
     }
 
@@ -731,157 +719,18 @@
       }
     }
 
-    // Preset functions
-    function loadPreset() {
-      console.log("Loading preset");
-      saveDrawingState();
-      const preset = document.getElementById("presetSelect").value;
-      clearCanvas();
-      switch(preset) {
-        case "rainbow":
-          drawRainbow();
-          break;
-        case "kitty":
-          drawHelloKitty();
-          break;
-        case "house":
-          drawHouse();
-          break;
-        case "sunset":
-          drawSunset();
-          break;
-      }
-    }
-
-    function drawRainbow() {
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height;
-      const radius = Math.min(canvas.width, canvas.height) * 0.8;
-      const colors = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"];
-      for (let i = 0; i < colors.length; i++) {
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, radius - i * 20, Math.PI, 0, false);
-        ctx.strokeStyle = colors[i];
-        ctx.lineWidth = 20;
-        ctx.stroke();
-      }
-    }
-
-    function drawHelloKitty() {
-      ctx.fillStyle = "white";
-      ctx.beginPath();
-      ctx.arc(canvas.width/2, canvas.height/2 - 30, 100, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.moveTo(canvas.width/2 - 50, canvas.height/2 - 80);
-      ctx.lineTo(canvas.width/2 - 90, canvas.height/2 - 120);
-      ctx.lineTo(canvas.width/2 - 40, canvas.height/2 - 110);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.moveTo(canvas.width/2 + 50, canvas.height/2 - 80);
-      ctx.lineTo(canvas.width/2 + 90, canvas.height/2 - 120);
-      ctx.lineTo(canvas.width/2 + 40, canvas.height/2 - 110);
-      ctx.fill();
-      ctx.fillStyle = "#ff66b2";
-      ctx.beginPath();
-      ctx.arc(canvas.width/2, canvas.height/2 - 90, 20, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = "black";
-      ctx.beginPath();
-      ctx.arc(canvas.width/2 - 30, canvas.height/2 - 40, 10, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(canvas.width/2 + 30, canvas.height/2 - 40, 10, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(canvas.width/2, canvas.height/2 - 20, 5, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    function drawHouse() {
-      ctx.fillStyle = "#8B4513";
-      ctx.fillRect(canvas.width/2 - 100, canvas.height/2 + 50, 200, 150);
-      ctx.fillStyle = "#A52A2A";
-      ctx.beginPath();
-      ctx.moveTo(canvas.width/2 - 120, canvas.height/2 + 50);
-      ctx.lineTo(canvas.width/2, canvas.height/2 - 50);
-      ctx.lineTo(canvas.width/2 + 120, canvas.height/2 + 50);
-      ctx.closePath();
-      ctx.fill();
-      ctx.fillStyle = "#654321";
-      ctx.fillRect(canvas.width/2 - 30, canvas.height/2 + 100, 60, 100);
-      ctx.fillStyle = "#ADD8E6";
-      ctx.fillRect(canvas.width/2 - 80, canvas.height/2 + 70, 40, 40);
-      ctx.fillRect(canvas.width/2 + 40, canvas.height/2 + 70, 40, 40);
-    }
-
-    function drawSunset() {
-      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      gradient.addColorStop(0, "#FF4500");
-      gradient.addColorStop(0.5, "#FF8C00");
-      gradient.addColorStop(1, "#FFD700");
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#FFD700";
-      ctx.beginPath();
-      ctx.arc(canvas.width/2, canvas.height + 50, 150, 0, Math.PI, true);
-      ctx.fill();
-      ctx.fillStyle = "#1E90FF";
-      ctx.fillRect(0, canvas.height/2 + 100, canvas.width, canvas.height/2 - 100);
-    }
-
-    // Theme functions
-    function changeTheme(theme) {
-      console.log(`Changing theme to: ${theme}`);
-      switch(theme) {
-        case "white":
-          canvas.style.backgroundColor = "white";
-          break;
-        case "pink":
-          canvas.style.backgroundColor = "#ff66b2";
-          break;
-        case "sky":
-          canvas.style.backgroundColor = "#66b3ff";
-          break;
-        case "mint":
-          canvas.style.backgroundColor = "#66ffb3";
-          break;
-      }
-    }
-
-    // Save/export functions
-    function saveImage(type) {
-      console.log(`Saving image as: ${type}`);
-      let link = document.createElement("a");
-      const fileName = `DrawHelloKitty_${new Date().toISOString().slice(0,10)}.${type}`;
-      link.download = fileName;
-      if (type === "pdf") {
-        try {
-          const { jsPDF } = window.jspdf;
-          const pdf = new jsPDF();
-          const imgData = canvas.toDataURL("image/png");
-          pdf.addImage(imgData, "PNG", 10, 10, canvas.width / 4, canvas.height / 4);
-          pdf.save(fileName);
-        } catch (e) {
-          console.error("PDF save error:", e);
-          alert("PDF export failed. Try PNG or JPEG.");
-        }
-        return;
-      }
-      link.href = canvas.toDataURL(`image/${type}`);
-      link.click();
-    }
-
-    function printCanvas() {
-      console.log("Printing canvas");
-      const dataUrl = canvas.toDataURL("image/png");
-      const windowContent = '<!DOCTYPE html><html><head><title>Print Canvas</title></head><body><img src="' + dataUrl + '"></body></html>';
-      const printWin = window.open('', '', 'width=800,height=600');
-      printWin.document.write(windowContent);
-      printWin.document.close();
-      printWin.focus();
-      printWin.print();
-      printWin.close();
+    // Drawing Prompt Generator
+    function generateDrawingPrompt() {
+      console.log("Generating drawing prompt");
+      const prompts = [
+        "Draw a rocket in space 🚀",
+        "Draw a rainbow with clouds 🌈",
+        "Draw a scientist in a lab 🧪",
+        "Draw a dinosaur in a forest 🦖",
+        "Draw the solar system ☀️"
+      ];
+      const prompt = prompts[Math.floor(Math.random() * prompts.length)];
+      document.getElementById("drawingPrompt").textContent = prompt;
     }
 
     // Coloring book mode
@@ -906,7 +755,7 @@
       tempCtx.strokeStyle = "black";
       tempCtx.lineWidth = 2;
       tempCtx.beginPath();
-      tempCtx.arc(canvas.width/2, canvas.height/2 - 30, 100, 0, Math.PI * 2);
+      tempCtx.arc(canvas.width/2, canvas.height/2, 100, 0, Math.PI * 2);
       tempCtx.stroke();
       return tempCanvas.toDataURL();
     }
@@ -974,6 +823,41 @@
       }
     }
 
+    // Save/export functions
+    function saveImage(type) {
+      console.log(`Saving image as: ${type}`);
+      let link = document.createElement("a");
+      const fileName = `DrawHelloKitty_${new Date().toISOString().slice(0,10)}.${type}`;
+      link.download = fileName;
+      if (type === "pdf") {
+        try {
+          const { jsPDF } = window.jspdf;
+          const pdf = new jsPDF();
+          const imgData = canvas.toDataURL("image/png");
+          pdf.addImage(imgData, "PNG", 10, 10, canvas.width / 4, canvas.height / 4);
+          pdf.save(fileName);
+        } catch (e) {
+          console.error("PDF save error:", e);
+          alert("PDF export failed. Try PNG or JPEG.");
+        }
+        return;
+      }
+      link.href = canvas.toDataURL(`image/${type}`);
+      link.click();
+    }
+
+    function printCanvas() {
+      console.log("Printing canvas");
+      const dataUrl = canvas.toDataURL("image/png");
+      const windowContent = '<!DOCTYPE html><html><head><title>Print Canvas</title></head><body><img src="' + dataUrl + '"></body></html>';
+      const printWin = window.open('', '', 'width=800,height=600');
+      printWin.document.write(windowContent);
+      printWin.document.close();
+      printWin.focus();
+      printWin.print();
+      printWin.close();
+    }
+
     // Game functions
     function closeGame() {
       console.log("Closing game");
@@ -985,6 +869,15 @@
       }
       currentGame = null;
       gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+      document.querySelectorAll(".reward-animation").forEach(el => el.remove());
+    }
+
+    function showRewardAnimation() {
+      const reward = document.createElement("div");
+      reward.className = "reward-animation";
+      reward.textContent = "😺";
+      document.getElementById("gameContainer").appendChild(reward);
+      setTimeout(() => reward.remove(), 1500);
     }
 
     function startMemoryGame() {
@@ -1039,6 +932,7 @@
           if (memoryCards[first] === memoryCards[second]) {
             matchedCards.push(first, second);
             gameScore += 10;
+            showRewardAnimation();
             document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
             flippedCards = [];
             if (matchedCards.length === memoryCards.length) {
@@ -1096,6 +990,7 @@
         if (index >= 0 && index < 3) {
           if (colorOptions[index] === targetColor) {
             gameScore += 5;
+            showRewardAnimation();
             document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
             generateColorRound();
           } else {
@@ -1164,6 +1059,216 @@
         gameCtx.stroke();
       }
       gameLastPoint = { x, y };
+    }
+
+    // Science Quiz Game
+    function startScienceQuiz() {
+      console.log("Starting Science Quiz");
+      currentGame = "scienceQuiz";
+      document.getElementById("gameContainer").style.display = "flex";
+      document.getElementById("gameTitle").textContent = "Science Quiz Game";
+      document.getElementById("gameInstructions").textContent = "Click the correct answer to earn points!";
+      gameScore = 0;
+      currentQuestion = 0;
+      document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
+      questions = [
+        { question: "What planet is known as the Red Planet?", answers: ["Mars", "Venus", "Jupiter"], correct: 0 },
+        { question: "What is the largest organ in the human body?", answers: ["Heart", "Skin", "Lung"], correct: 1 },
+        { question: "What force pulls objects to the ground?", answers: ["Magnetism", "Gravity", "Electricity"], correct: 1 }
+      ];
+      renderScienceQuiz();
+      gameCanvas.onclick = handleQuizAnswer;
+    }
+
+    function renderScienceQuiz() {
+      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+      if (currentQuestion >= questions.length) {
+        gameCtx.font = "30px Comic Sans MS";
+        gameCtx.fillStyle = "black";
+        gameCtx.fillText(`Game Over! Score: ${gameScore}`, 50, 200);
+        gameCanvas.onclick = null;
+        return;
+      }
+      const q = questions[currentQuestion];
+      gameCtx.font = "20px Comic Sans MS";
+      gameCtx.fillStyle = "black";
+      gameCtx.fillText(q.question, 50, 100);
+      for (let i = 0; i < q.answers.length; i++) {
+        gameCtx.fillStyle = "#ff66b2";
+        gameCtx.fillRect(50, 150 + i * 60, 300, 50);
+        gameCtx.fillStyle = "white";
+        gameCtx.fillText(q.answers[i], 60, 180 + i * 60);
+      }
+    }
+
+    function handleQuizAnswer(e) {
+      console.log("Quiz answer clicked");
+      const rect = gameCanvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const q = questions[currentQuestion];
+      for (let i = 0; i < q.answers.length; i++) {
+        if (x >= 50 && x <= 350 && y >= 150 + i * 60 && y <= 200 + i * 60) {
+          if (i === q.correct) {
+            gameScore += 10;
+            showRewardAnimation();
+            document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
+          } else {
+            gameScore = Math.max(0, gameScore - 2);
+            document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
+          }
+          currentQuestion++;
+          renderScienceQuiz();
+          break;
+        }
+      }
+    }
+
+    // Barbie Dress-Up Game
+    function startBarbieDressUp() {
+      console.log("Starting Barbie Dress-Up");
+      currentGame = "barbieDressUp";
+      document.getElementById("gameContainer").style.display = "flex";
+      document.getElementById("gameTitle").textContent = "Barbie Dress-Up Game";
+      document.getElementById("gameInstructions").textContent = "Click to change dress color or pattern!";
+      gameScore = 0;
+      document.getElementById("gameScore").textContent = `Creations: ${gameScore}`;
+      barbieOutfit = { dressColor: "#ff66b2", pattern: "none" };
+      renderBarbieDressUp();
+      gameCanvas.onclick = handleBarbieDressUp;
+    }
+
+    function renderBarbieDressUp() {
+      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+      // Draw Barbie (simplified as a dress shape)
+      gameCtx.fillStyle = barbieOutfit.dressColor;
+      gameCtx.beginPath();
+      gameCtx.moveTo(200, 100);
+      gameCtx.lineTo(150, 300);
+      gameCtx.lineTo(250, 300);
+      gameCtx.closePath();
+      gameCtx.fill();
+      if (barbieOutfit.pattern === "stars") {
+        gameCtx.fillStyle = "white";
+        for (let i = 0; i < 5; i++) {
+          gameCtx.beginPath();
+          gameCtx.arc(170 + i * 20, 150 + i * 30, 5, 0, Math.PI * 2);
+          gameCtx.fill();
+        }
+      }
+      // Color options
+      const colors = ["#ff66b2", "#66b3ff", "#66ffb3"];
+      for (let i = 0; i < colors.length; i++) {
+        gameCtx.fillStyle = colors[i];
+        gameCtx.fillRect(50 + i * 100, 320, 80, 40);
+      }
+      // Pattern options
+      gameCtx.fillStyle = "#ff99cc";
+      gameCtx.fillRect(50, 360, 80, 40);
+      gameCtx.fillStyle = "white";
+      gameCtx.fillText("None", 60, 385);
+      gameCtx.fillStyle = "#ff99cc";
+      gameCtx.fillRect(150, 360, 80, 40);
+      gameCtx.fillStyle = "white";
+      gameCtx.fillText("Stars", 160, 385);
+    }
+
+    function handleBarbieDressUp(e) {
+      console.log("Barbie dress-up clicked");
+      const rect = gameCanvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      // Color selection
+      if (y >= 320 && y <= 360) {
+        const index = Math.floor((x - 50) / 100);
+        if (index >= 0 && index < 3) {
+          barbieOutfit.dressColor = ["#ff66b2", "#66b3ff", "#66ffb3"][index];
+          gameScore++;
+          showRewardAnimation();
+          document.getElementById("gameScore").textContent = `Creations: ${gameScore}`;
+          renderBarbieDressUp();
+        }
+      }
+      // Pattern selection
+      if (y >= 360 && y <= 400) {
+        if (x >= 50 && x <= 130) {
+          barbieOutfit.pattern = "none";
+          gameScore++;
+          showRewardAnimation();
+          document.getElementById("gameScore").textContent = `Creations: ${gameScore}`;
+          renderBarbieDressUp();
+        } else if (x >= 150 && x <= 230) {
+          barbieOutfit.pattern = "stars";
+          gameScore++;
+          showRewardAnimation();
+          document.getElementById("gameScore").textContent = `Creations: ${gameScore}`;
+          renderBarbieDressUp();
+        }
+      }
+    }
+
+    // Science Experiment Game
+    function startScienceExperiment() {
+      console.log("Starting Science Experiment");
+      currentGame = "scienceExperiment";
+      document.getElementById("gameContainer").style.display = "flex";
+      document.getElementById("gameTitle").textContent = "Science Experiment Game";
+      document.getElementById("gameInstructions").textContent = "Click chemicals to mix them!";
+      gameScore = 0;
+      document.getElementById("gameScore").textContent = `Reactions: ${gameScore}`;
+      experimentChemicals = [];
+      renderScienceExperiment();
+      gameCanvas.onclick = handleExperimentMix;
+    }
+
+    function renderScienceExperiment() {
+      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+      // Draw beaker
+      gameCtx.strokeStyle = "black";
+      gameCtx.lineWidth = 2;
+      gameCtx.beginPath();
+      gameCtx.moveTo(150, 100);
+      gameCtx.lineTo(150, 300);
+      gameCtx.lineTo(250, 300);
+      gameCtx.lineTo(250, 100);
+      gameCtx.stroke();
+      // Draw mixed color
+      if (experimentChemicals.length > 0) {
+        const mixedColor = experimentChemicals.length === 2 ? mixColors(experimentChemicals[0], experimentChemicals[1]) : experimentChemicals[0];
+        gameCtx.fillStyle = mixedColor;
+        gameCtx.fillRect(150, 200, 100, 100);
+      }
+      // Chemical options
+      const chemicals = ["#ff0000", "#00ff00", "#0000ff"];
+      for (let i = 0; i < chemicals.length; i++) {
+        gameCtx.fillStyle = chemicals[i];
+        gameCtx.fillRect(50 + i * 100, 320, 80, 40);
+      }
+    }
+
+    function mixColors(c1, c2) {
+      if ((c1 === "#ff0000" && c2 === "#00ff00") || (c1 === "#00ff00" && c2 === "#ff0000")) return "#ffff00";
+      if ((c1 === "#ff0000" && c2 === "#0000ff") || (c1 === "#0000ff" && c2 === "#ff0000")) return "#ff00ff";
+      if ((c1 === "#00ff00" && c2 === "#0000ff") || (c1 === "#0000ff" && c2 === "#00ff00")) return "#00ffff";
+      return c1;
+    }
+
+    function handleExperimentMix(e) {
+      console.log("Experiment chemical clicked");
+      const rect = gameCanvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      if (y >= 320 && y <= 360) {
+        const index = Math.floor((x - 50) / 100);
+        if (index >= 0 && index < 3) {
+          experimentChemicals.push(["#ff0000", "#00ff00", "#0000ff"][index]);
+          if (experimentChemicals.length > 2) experimentChemicals.shift();
+          gameScore++;
+          showRewardAnimation();
+          document.getElementById("gameScore").textContent = `Reactions: ${gameScore}`;
+          renderScienceExperiment();
+        }
+      }
     }
 
     // Tutorial functions
