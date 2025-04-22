@@ -6,157 +6,48 @@
   <title>DrawHelloKitty</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       font-family: 'Comic Sans MS', cursive, sans-serif;
-      background: linear-gradient(to bottom right, #ffccff, #ff99cc);
+      background: linear-gradient(135deg, #ffccff, #ff99cc);
       text-align: center;
-      padding: 30px;
+      padding: 20px;
       color: #d63384;
-      margin: 0;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
     h1 {
-      font-size: 48px;
+      font-size: 3rem;
       color: #ff3399;
-      text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.8);
-      margin-top: 0;
-    }
-
-    .toolbox {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-
-    .section {
-      background: rgba(255, 230, 240, 0.9);
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 4px 6px rgba(255, 138, 198, 0.5);
-      min-width: 220px;
-    }
-
-    .section h3 {
-      margin-bottom: 10px;
-      margin-top: 0;
-      color: #ff3399;
-      font-size: 24px;
-    }
-
-    button, select, input[type="text"], input[type="color"] {
-      font-family: inherit;
-      background: #ff99cc;
-      border: none;
-      padding: 12px 16px;
-      margin: 5px;
-      border-radius: 10px;
-      box-shadow: 2px 2px 0 #ff5caa;
-      cursor: pointer;
-      font-size: 18px;
-      transition: all 0.2s;
-    }
-
-    button:hover, select:hover {
-      background: #ff66b2;
-      transform: translateY(-2px);
-    }
-
-    button:active {
-      transform: translateY(0);
-    }
-
-    #canvas {
-      border: 4px dotted #fff;
-      background: white;
-      margin-top: 20px;
-      border-radius: 12px;
-      cursor: crosshair;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    }
-
-    footer {
-      margin-top: 30px;
-      font-size: 18px;
-      color: #aa1166;
-    }
-
-    .game-container {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 100;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .game-window {
-      background: #ffe6f0;
-      padding: 20px;
-      border-radius: 20px;
-      width: 80%;
-      max-width: 500px;
-      box-shadow: 0 0 20px rgba(255, 140, 180, 0.8);
-    }
-
-    .game-canvas {
-      background: white;
-      border: 3px dashed #ff99cc;
-      border-radius: 10px;
-      margin: 10px auto;
-      display: block;
-    }
-
-    .close-game {
-      background: #ff5caa;
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 10px;
-      margin-top: 10px;
-      font-size: 18px;
-    }
-
-    .sticker-palette {
-      display: none;
-      position: absolute;
-      background: #ffe6f0;
-      padding: 10px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      z-index: 10;
-    }
-
-    .sticker {
-      font-size: 40px;
-      cursor: pointer;
-      margin: 5px;
-      display: inline-block;
-    }
-
-    .sticker:hover {
-      transform: scale(1.2);
+      text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+      margin-bottom: 1rem;
     }
 
     .tab-container {
       display: flex;
       justify-content: center;
-      margin-bottom: 15px;
+      gap: 10px;
+      margin-bottom: 1rem;
     }
 
     .tab {
-      padding: 12px 20px;
+      padding: 0.75rem 1.5rem;
       background: #ff99cc;
       border-radius: 10px 10px 0 0;
-      margin: 0 5px;
       cursor: pointer;
-      font-size: 20px;
+      font-size: 1.25rem;
+      transition: all 0.3s;
+    }
+
+    .tab:hover {
+      background: #ff66b2;
+      transform: translateY(-2px);
     }
 
     .tab.active {
@@ -172,54 +63,197 @@
       display: block;
     }
 
-    .undo-redo {
-      display: flex;
+    .toolbox {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: rgba(255, 230, 240, 0.95);
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(255, 138, 198, 0.5);
+    }
+
+    .section {
+      padding: 1rem;
+      border-radius: 10px;
+    }
+
+    .section h3 {
+      color: #ff3399;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    button, select, input[type="text"], input[type="color"], input[type="range"] {
+      font-family: inherit;
+      background: #ff99cc;
+      border: none;
+      padding: 0.75rem;
+      margin: 0.25rem;
+      border-radius: 8px;
+      box-shadow: 2px 2px 4px rgba(255, 92, 170, 0.5);
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+
+    button:hover, select:hover, input:hover {
+      background: #ff66b2;
+      transform: translateY(-2px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    #canvas {
+      border: 4px dotted #fff;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      cursor: crosshair;
+      max-width: 100%;
+      touch-action: none;
+    }
+
+    .game-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 1000;
       justify-content: center;
-      gap: 10px;
-      margin-top: 10px;
+      align-items: center;
+    }
+
+    .game-window {
+      background: #ffe6f0;
+      padding: 1.5rem;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 0 20px rgba(255, 140, 180, 0.8);
+      position: relative;
+    }
+
+    .game-canvas {
+      background: white;
+      border: 3px dashed #ff99cc;
+      border-radius: 10px;
+      margin: 0.5rem auto;
+      display: block;
+      max-width: 100%;
+    }
+
+    .close-game, .mute-button {
+      background: #ff5caa;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      margin-top: 0.5rem;
+    }
+
+    .sticker-palette {
+      display: none;
+      position: absolute;
+      background: #ffe6f0;
+      padding: 0.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+    }
+
+    .sticker {
+      font-size: 2rem;
+      cursor: pointer;
+      margin: 0.25rem;
+      display: inline-block;
+      transition: transform 0.2s;
+    }
+
+    .sticker:hover {
+      transform: scale(1.2);
     }
 
     .prompt-container {
-      margin: 10px auto;
-      font-size: 20px;
+      font-size: 1.25rem;
       color: #ff3399;
+      margin: 0.5rem 0;
     }
 
-    @media (max-width: 768px) {
-      .toolbox {
-        flex-direction: column;
-        align-items: center;
-      }
-      #canvas {
-        width: 95%;
-        height: auto;
-      }
-      h1 {
-        font-size: 36px;
-      }
-      button, select, input {
-        font-size: 16px;
-        padding: 10px 14px;
-      }
+    .undo-redo {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
     }
 
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-20px); }
+    .unicorn-speech {
+      background: white;
+      border: 2px solid #ff99cc;
+      border-radius: 10px;
+      padding: 0.5rem;
+      max-width: 200px;
+      word-wrap: break-word;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+
+    .component, .device {
+      transition: transform 0.2s;
+    }
+
+    .component:hover, .device:hover {
+      transform: scale(1.1);
     }
 
     .reward-animation {
-      font-size: 60px;
+      font-size: 3rem;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       animation: bounce 0.5s 3;
     }
+
+    @keyframes bounce {
+      0%, 100% { transform: translate(-50%, -50%); }
+      50% { transform: translate(-50%, -70%); }
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 2rem; }
+      .tab { font-size: 1rem; padding: 0.5rem 1rem; }
+      .toolbox { grid-template-columns: 1fr; }
+      button, select, input { font-size: 0.9rem; padding: 0.5rem; }
+      #canvas, .game-canvas { width: 100%; height: auto; }
+      .game-window { width: 95%; }
+    }
   </style>
 </head>
 <body>
-  <h1>Welcome to DrawHelloKitty! ✏️🎨</h1>
+  <h1>DrawHelloKitty 🎀✏️</h1>
+
+  <!-- Audio Elements -->
+  <audio id="barbieMusic" loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" type="audio/mp3">
+  </audio>
+  <audio id="unicornMusic" loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-happyrock.mp3" type="audio/mp3">
+  </audio>
+  <audio id="roboticsMusic" loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-scifi.mp3" type="audio/mp3">
+  </audio>
+  <audio id="carMusic" loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-goinghigher.mp3" type="audio/mp3">
+  </audio>
+  <audio id="iotMusic" loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-energy.mp3" type="audio/mp3">
+  </audio>
 
   <div class="tab-container">
     <div class="tab active" onclick="switchTab('drawing')" aria-label="Drawing Tab">Drawing</div>
@@ -231,74 +265,73 @@
     <div class="prompt-container" id="drawingPrompt">Click "New Prompt" for a fun drawing idea!</div>
     <div class="toolbox">
       <div class="section">
-        <h3>Brush Tools:</h3>
-        <select id="brushType" title="Choose your drawing tool" aria-label="Brush Type Selector">
+        <h3>Brush Tools</h3>
+        <select id="brushType" aria-label="Brush Type Selector">
           <option value="crayon">Crayon</option>
           <option value="marker">Marker</option>
         </select>
-        <h3>Color:</h3>
-        <input type="color" id="colorPicker" value="#ff1493" title="Pick a color" aria-label="Color Picker"/>
+        <h3>Color</h3>
+        <input type="color" id="colorPicker" value="#ff1493" aria-label="Color Picker"/>
         <h3>Size: <span id="sizeValue">5</span></h3>
-        <input type="range" id="sizeSlider" min="1" max="20" value="5" title="Adjust brush size" aria-label="Brush Size Slider"/>
+        <input type="range" id="sizeSlider" min="1" max="20" value="5" aria-label="Brush Size Slider"/>
       </div>
-
       <div class="section">
-        <h3>Shapes:</h3>
-        <button onclick="drawShape('circle')" title="Draw a circle" aria-label="Draw Circle">⭕ Circle</button>
-        <button onclick="drawShape('square')" title="Draw a square" aria-label="Draw Square">⬛ Square</button>
-        <button onclick="drawShape('triangle')" title="Draw a triangle" aria-label="Draw Triangle">🔺 Triangle</button>
+        <h3>Shapes</h3>
+        <button onclick="drawShape('circle')" aria-label="Draw Circle">⭕ Circle</button>
+        <button onclick="drawShape('square')" aria-label="Draw Square">⬛ Square</button>
+        <button onclick="drawShape('triangle')" aria-label="Draw Triangle">🔺 Triangle</button>
       </div>
-
       <div class="section">
-        <h3>Stickers & Text:</h3>
-        <button onclick="showStickers()" title="Choose a sticker" aria-label="Show Stickers">🎀 Stickers</button>
-        <button onclick="stampEmoji('😺')" title="Add a kitty sticker" aria-label="Kitty Sticker">😺 Kitty</button>
-        <h3>Your Name:</h3>
-        <input type="text" id="nameInput" placeholder="Enter your name" title="Type your name" aria-label="Name Input"/>
-        <button onclick="addName()" title="Add your name to the canvas" aria-label="Add Name">Add Name</button>
+        <h3>Stickers & Text</h3>
+        <button onclick="showStickers()" aria-label="Show Stickers">🎀 Stickers</button>
+        <button onclick="stampEmoji('😺')" aria-label="Kitty Sticker">😺 Kitty</button>
+        <h3>Your Name</h3>
+        <input type="text" id="nameInput" placeholder="Enter your name" aria-label="Name Input"/>
+        <button onclick="addName()" aria-label="Add Name">Add Name</button>
       </div>
-
       <div class="section">
-        <h3>Canvas Tools:</h3>
-        <button onclick="toggleEraser()" title="Switch to eraser" aria-label="Toggle Eraser">🧽 Eraser</button>
-        <button onclick="clearCanvas()" title="Clear the canvas" aria-label="Clear Canvas">🗑️ Clear</button>
+        <h3>Canvas Tools</h3>
+        <button onclick="toggleEraser()" aria-label="Toggle Eraser">🧽 Eraser</button>
+        <button onclick="clearCanvas()" aria-label="Clear Canvas">🗑️ Clear</button>
         <div class="undo-redo">
-          <button onclick="undo()" title="Undo last action" aria-label="Undo">↩️ Undo</button>
-          <button onclick="redo()" title="Redo last action" aria-label="Redo">↪️ Redo</button>
+          <button onclick="undo()" aria-label="Undo">↩️ Undo</button>
+          <button onclick="redo()" aria-label="Redo">↪️ Redo</button>
         </div>
       </div>
-
       <div class="section">
-        <h3>Save & Share:</h3>
-        <button onclick="saveImage('png')" title="Save as PNG" aria-label="Save PNG">💾 Save PNG</button>
-        <button onclick="saveImage('pdf')" title="Save as PDF" aria-label="Save PDF">📄 Save PDF</button>
-        <h3>Background:</h3>
-        <select onchange="changeTheme(this.value)" title="Change canvas background" aria-label="Background Theme Selector">
+        <h3>Save & Share</h3>
+        <button onclick="saveImage('png')" aria-label="Save PNG">💾 Save PNG</button>
+        <button onclick="saveImage('pdf')" aria-label="Save PDF">📄 Save PDF</button>
+        <h3>Background</h3>
+        <select onchange="changeTheme(this.value)" aria-label="Background Theme Selector">
           <option value="white">White</option>
           <option value="pink">Pink</option>
           <option value="sky">Sky Blue</option>
         </select>
       </div>
-
       <div class="section">
-        <h3>Fun Activities:</h3>
-        <button onclick="generateDrawingPrompt()" title="Get a new drawing idea" aria-label="New Drawing Prompt">✨ New Prompt</button>
-        <button onclick="startColoringBook()" title="Color a picture" aria-label="Coloring Book">🖍️ Coloring Book</button>
-        <button onclick="startConnectDots()" title="Connect the dots" aria-label="Connect Dots">🔢 Connect Dots</button>
+        <h3>Fun Activities</h3>
+        <button onclick="generateDrawingPrompt()" aria-label="New Drawing Prompt">✨ New Prompt</button>
+        <button onclick="startColoringBook()" aria-label="Coloring Book">🖍️ Coloring Book</button>
+        <button onclick="startConnectDots()" aria-label="Connect Dots">🔢 Connect Dots</button>
       </div>
     </div>
-
     <canvas id="canvas" width="700" height="500" aria-label="Drawing Canvas"></canvas>
   </div>
 
   <div id="games-tab" class="content-area">
     <div class="section" style="max-width: 600px; margin: 0 auto;">
       <h2>🎮 Fun Games 🎮</h2>
-      <button onclick="startScienceQuiz()" title="Answer science questions" aria-label="Science Quiz">🔬 Science Quiz</button>
-      <button onclick="startBarbieDressUp()" title="Design Barbie's outfit" aria-label="Barbie Dress-Up">👗 Barbie Dress-Up</button>
-      <button onclick="startScienceExperiment()" title="Mix chemicals" aria-label="Science Experiment">🧪 Science Experiment</button>
-      <button onclick="startClockTimeGame()" title="Set the correct time" aria-label="Clock Time Game">⏰ Clock Time</button>
-      <button onclick="startShopkeeperMoneyGame()" title="Pay the shopkeeper" aria-label="Shopkeeper Money Game">💸 Shopkeeper</button>
+      <button onclick="startScienceQuiz()" aria-label="Science Quiz">🔬 Science Quiz</button>
+      <button onclick="startBarbieDressUp()" aria-label="Barbie Dress-Up">👗 Barbie Dress-Up</button>
+      <button onclick="startUnicornTalking()" aria-label="Unicorn Talking">🦄 Unicorn Talking</button>
+      <button onclick="startRoboticsGame()" aria-label="Robotics Game">🤖 Robotics</button>
+      <button onclick="startCarBuildingGame()" aria-label="Car Building">🚗 Car Building</button>
+      <button onclick="startIoTSmartHome()" aria-label="Smart Home">🏠 Smart Home</button>
+      <button onclick="startScienceExperiment()" aria-label="Science Experiment">🧪 Science Experiment</button>
+      <button onclick="startClockTimeGame()" aria-label="Clock Time Game">⏰ Clock Time</button>
+      <button onclick="startShopkeeperMoneyGame()" aria-label="Shopkeeper Money Game">💸 Shopkeeper</button>
+      <button class="mute-button" onclick="toggleMusic()" aria-label="Toggle Music">🎵 Toggle Music</button>
     </div>
   </div>
 
@@ -307,48 +340,49 @@
       <h2>✏️ Learn to Draw ✏️</h2>
       <div id="tutorial-steps">
         <h3>Let's draw a cute cat!</h3>
-        <ol style="text-align: left; font-size: 18px;">
+        <ol style="text-align: left; font-size: 1.1rem;">
           <li>Draw a circle for the head</li>
           <li>Add two triangle ears</li>
           <li>Draw two dots for eyes</li>
         </ol>
-        <button onclick="showStepByStep('cat')" title="See how to draw a cat" aria-label="Cat Drawing Tutorial">Show Me How</button>
-        
-        <h3 style="margin-top: 20px;">Let's draw a flower!</h3>
-        <ol style="text-align: left; font-size: 18px;">
+        <button onclick="showStepByStep('cat')" aria-label="Cat Drawing Tutorial">Show Me How</button>
+        <h3>Let's draw a flower!</h3>
+        <ol style="text-align: left; font-size: 1.1rem;">
           <li>Draw a small circle</li>
           <li>Add petals around it</li>
           <li>Draw a stem</li>
         </ol>
-        <button onclick="showStepByStep('flower')" title="See how to draw a flower" aria-label="Flower Drawing Tutorial">Show Me How</button>
+        <button onclick="showStepByStep('flower')" aria-label="Flower Drawing Tutorial">Show Me How</button>
       </div>
     </div>
   </div>
 
   <div class="sticker-palette" id="stickerPalette" aria-label="Sticker Palette">
-    <div class="sticker" onclick="stampEmoji('😺')" title="Kitty sticker" aria-label="Kitty Sticker">😺</div>
-    <div class="sticker" onclick="stampEmoji('🌸')" title="Flower sticker" aria-label="Flower Sticker">🌸</div>
-    <div class="sticker" onclick="stampEmoji('🎀')" title="Bow sticker" aria-label="Bow Sticker">🎀</div>
+    <div class="sticker" onclick="stampEmoji('😺')" aria-label="Kitty Sticker">😺</div>
+    <div class="sticker" onclick="stampEmoji('🌸')" aria-label="Flower Sticker">🌸</div>
+    <div class="sticker" onclick="stampEmoji('🎀')" aria-label="Bow Sticker">🎀</div>
   </div>
 
   <div class="game-container" id="gameContainer" aria-label="Game Container">
     <div class="game-window">
       <h2 id="gameTitle">Game</h2>
       <canvas class="game-canvas" id="gameCanvas" width="400" height="400" aria-label="Game Canvas"></canvas>
-      <div id="gameInstructions" style="margin: 10px 0; font-size: 18px;"></div>
-      <div id="gameScore" style="font-weight: bold; margin: 10px 0; font-size: 18px;"></div>
-      <button class="close-game" onclick="closeGame()" title="Close the game" aria-label="Close Game">Close Game</button>
+      <div id="gameInstructions" style="margin: 0.5rem 0; font-size: 1.1rem;"></div>
+      <div id="gameScore" style="font-weight: bold; margin: 0.5rem 0; font-size: 1.1rem;"></div>
+      <button class="close-game" onclick="closeGame()" aria-label="Close Game">Close Game</button>
     </div>
   </div>
 
-  <footer>Made with ❤️ by Nakshu | © 2023 DrawHelloKitty</footer>
+  <footer style="margin-top: 2rem; font-size: 1.1rem; color: #aa1166;">
+    Made with ❤️ by Nakshu | © 2025 DrawHelloKitty
+  </footer>
 
   <script>
     // Canvas setup
     const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: true });
     const gameCanvas = document.getElementById("gameCanvas");
-    const gameCtx = gameCanvas.getContext("2d");
+    const gameCtx = gameCanvas.getContext("2d", { alpha: true });
 
     // Drawing state
     let drawing = false;
@@ -363,18 +397,45 @@
     let coloringBookMode = false;
     let coloringBookImage = null;
     let lastPoint = null;
+    let canvasBackground = "white";
 
     // Game state
     let currentGame = null;
     let gameScore = 0;
-    let currentQuestion = 0;
-    let questions = [];
-    let barbieOutfit = { dressColor: "#ff66b2", pattern: "none" };
-    let experimentChemicals = [];
-    let targetTime = { hour: 0, minute: 0 };
-    let clockHands = { hour: 0, minute: 0 };
-    let shopItem = { name: "", price: 0 };
-    let moneyOptions = [];
+    let isMusicMuted = false;
+    let currentMusic = null;
+
+    // Barbie Dress-Up state
+    let selectedDoll = "barbie";
+    let barbieOutfits = {
+      barbie: { dress: "party", color: "#ff66b2", makeup: "none", theme: "beach" },
+      ken: { dress: "casual", color: "#66b3ff", makeup: "none", theme: "city" },
+      skipper: { dress: "sporty", color: "#66ffb3", makeup: "none", theme: "adventure" }
+    };
+
+    // Unicorn Talking state
+    let unicornMessages = [
+      "Wow, you're so sparkly! ✨",
+      "Let's gallop to a magical land! 🦄",
+      "You're my best friend! 😺"
+    ];
+
+    // Robotics state
+    let circuitComponents = [];
+    let selectedComponent = null;
+
+    // Car Building state
+    let carParts = { wheels: false, motor: false, battery: false };
+    let carBuilt = false;
+
+    // IoT Smart Home state
+    let smartHomeDevices = {
+      fan: false,
+      geyser: false,
+      fridge: false,
+      phone: false,
+      tv: false
+    };
 
     // Initialize
     document.getElementById("colorPicker").value = brushColor;
@@ -384,13 +445,13 @@
     };
 
     // Event listeners
-    canvas.onmousedown = startDrawing;
-    canvas.onmouseup = stopDrawing;
-    canvas.onmouseleave = stopDrawing;
-    canvas.onmousemove = draw;
-    canvas.ontouchstart = handleTouchStart;
-    canvas.ontouchmove = handleTouchMove;
-    canvas.ontouchend = stopDrawing;
+    canvas.addEventListener("mousedown", startDrawing);
+    canvas.addEventListener("mouseup", stopDrawing);
+    canvas.addEventListener("mouseleave", stopDrawing);
+    canvas.addEventListener("mousemove", draw);
+    canvas.addEventListener("touchstart", handleTouchStart, { passive: false });
+    canvas.addEventListener("touchmove", handleTouchMove, { passive: false });
+    canvas.addEventListener("touchend", stopDrawing, { passive: false });
 
     document.getElementById("brushType").onchange = function(e) {
       currentBrush = e.target.value;
@@ -402,24 +463,33 @@
       isEraser = false;
     };
 
+    // Utility functions
+    function getCanvasCoords(e, canvasElement) {
+      const rect = canvasElement.getBoundingClientRect();
+      const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+      const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+      return {
+        x: (clientX - rect.left) * (canvasElement.width / rect.width),
+        y: (clientY - rect.top) * (canvasElement.height / rect.height)
+      };
+    }
+
     // Tab switching
     function switchTab(tab) {
-      console.log(`Switching to tab: ${tab}`);
-      const tabs = document.querySelectorAll(".tab");
-      const contents = document.querySelectorAll(".content-area");
-      tabs.forEach(t => t.classList.remove("active"));
-      contents.forEach(c => c.classList.remove("active"));
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".content-area").forEach(c => c.classList.remove("active"));
       document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add("active");
       document.getElementById(`${tab}-tab`).classList.add("active");
       if (tab !== "drawing") {
         coloringBookMode = false;
         connectDotsMode = false;
       }
+      stopMusic();
     }
 
     // Drawing functions
     function startDrawing(e) {
-      console.log("Starting to draw");
+      e.preventDefault();
       if (coloringBookMode || connectDotsMode) {
         handleSpecialMode(e);
         return;
@@ -430,7 +500,6 @@
     }
 
     function stopDrawing() {
-      console.log("Stopping drawing");
       drawing = false;
       ctx.beginPath();
       lastPoint = null;
@@ -438,9 +507,7 @@
 
     function draw(e) {
       if (!drawing) return;
-      const rect = canvas.getBoundingClientRect();
-      const x = (e.clientX || e.touches[0].clientX) - rect.left;
-      const y = (e.clientY || e.touches[0].clientY) - rect.top;
+      const { x, y } = getCanvasCoords(e, canvas);
       ctx.lineJoin = "round";
       ctx.lineCap = "round";
       if (isEraser) {
@@ -452,15 +519,10 @@
         ctx.fillStyle = brushColor;
       }
       ctx.lineWidth = brushSize;
-      switch(currentBrush) {
-        case "crayon":
-          drawCrayon(x, y);
-          break;
-        case "marker":
-          drawMarker(x, y);
-          break;
-        default:
-          drawCrayon(x, y);
+      if (currentBrush === "crayon") {
+        drawCrayon(x, y);
+      } else {
+        drawMarker(x, y);
       }
     }
 
@@ -472,7 +534,7 @@
         ctx.stroke();
       }
       ctx.beginPath();
-      ctx.arc(x, y, brushSize/2, 0, Math.PI*2);
+      ctx.arc(x, y, brushSize / 2, 0, Math.PI * 2);
       ctx.fill();
       lastPoint = { x, y };
     }
@@ -507,9 +569,8 @@
       canvas.dispatchEvent(mouseEvent);
     }
 
-    // Shape drawing functions
+    // Shape drawing
     function drawShape(shape) {
-      console.log(`Drawing shape: ${shape}`);
       saveDrawingState();
       ctx.fillStyle = brushColor;
       ctx.strokeStyle = brushColor;
@@ -518,19 +579,19 @@
       const centerY = canvas.height / 2;
       const size = Math.min(canvas.width, canvas.height) * 0.3;
       ctx.beginPath();
-      switch(shape) {
+      switch (shape) {
         case "circle":
-          ctx.arc(centerX, centerY, size/2, 0, Math.PI * 2);
+          ctx.arc(centerX, centerY, size / 2, 0, Math.PI * 2);
           ctx.fill();
           break;
         case "square":
-          ctx.rect(centerX - size/2, centerY - size/2, size, size);
+          ctx.rect(centerX - size / 2, centerY - size / 2, size, size);
           ctx.fill();
           break;
         case "triangle":
-          ctx.moveTo(centerX, centerY - size/2);
-          ctx.lineTo(centerX + size/2, centerY + size/2);
-          ctx.lineTo(centerX - size/2, centerY + size/2);
+          ctx.moveTo(centerX, centerY - size / 2);
+          ctx.lineTo(centerX + size / 2, centerY + size / 2);
+          ctx.lineTo(centerX - size / 2, centerY + size / 2);
           ctx.closePath();
           ctx.fill();
           break;
@@ -539,15 +600,14 @@
 
     // Tool functions
     function toggleEraser() {
-      console.log(`Toggling eraser: ${!isEraser}`);
       isEraser = !isEraser;
       document.getElementById("brushType").value = isEraser ? "crayon" : currentBrush;
     }
 
     function clearCanvas() {
-      console.log("Clearing canvas");
       saveDrawingState();
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = canvasBackground;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
       if (coloringBookMode && coloringBookImage) {
         ctx.drawImage(coloringBookImage, 0, 0, canvas.width, canvas.height);
       }
@@ -556,20 +616,23 @@
       }
     }
 
+    function changeTheme(theme) {
+      canvasBackground = theme === "pink" ? "#ffe6f0" : theme === "sky" ? "#e0f7fa" : "white";
+      clearCanvas();
+    }
+
     function addName() {
-      console.log("Adding name");
-      saveDrawingState();
-      const name = document.getElementById("nameInput").value;
+      const name = document.getElementById("nameInput").value.trim();
       if (!name) return;
-      ctx.fillStyle = brushColor;
+      saveDrawingState();
+      ctx.fillStyle lfillStyle = brushColor;
       ctx.font = "24px Comic Sans MS";
       ctx.fillText(name, 20, 40);
     }
 
     function stampEmoji(emoji) {
-      console.log(`Stamping emoji: ${emoji}`);
       saveDrawingState();
-      ctx.font = `40px serif`;
+      ctx.font = "40px serif";
       ctx.fillStyle = brushColor;
       const x = Math.random() * (canvas.width - 50) + 25;
       const y = Math.random() * (canvas.height - 50) + 25;
@@ -577,21 +640,19 @@
     }
 
     function showStickers() {
-      console.log("Showing stickers");
       const palette = document.getElementById("stickerPalette");
       palette.style.display = "block";
       palette.style.left = "50px";
       palette.style.top = "50px";
-      setTimeout(() => {
-        document.addEventListener("click", closeStickers);
-      }, 10);
+      document.addEventListener("click", closeStickers, { once: true });
     }
 
     function closeStickers(e) {
-      if (!document.getElementById("stickerPalette").contains(e.target)) {
-        console.log("Closing stickers");
-        document.getElementById("stickerPalette").style.display = "none";
-        document.removeEventListener("click", closeStickers);
+      const palette = document.getElementById("stickerPalette");
+      if (!palette.contains(e.target)) {
+        palette.style.display = "none";
+      } else {
+        document.addEventListener("click", closeStickers, { once: true });
       }
     }
 
@@ -602,7 +663,7 @@
       }
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       drawingHistory.push(imageData);
-      historyIndex = drawingHistory.length - 1;
+      historyIndex++;
       if (drawingHistory.length > 20) {
         drawingHistory.shift();
         historyIndex--;
@@ -610,7 +671,6 @@
     }
 
     function undo() {
-      console.log("Undoing");
       if (historyIndex <= 0) return;
       historyIndex--;
       ctx.putImageData(drawingHistory[historyIndex], 0, 0);
@@ -623,7 +683,6 @@
     }
 
     function redo() {
-      console.log("Redoing");
       if (historyIndex >= drawingHistory.length - 1) return;
       historyIndex++;
       ctx.putImageData(drawingHistory[historyIndex], 0, 0);
@@ -635,9 +694,8 @@
       }
     }
 
-    // Drawing Prompt Generator
+    // Drawing Prompt
     function generateDrawingPrompt() {
-      console.log("Generating drawing prompt");
       const prompts = [
         "Draw a rocket in space 🚀",
         "Draw a clock showing 6:00 ⏰",
@@ -645,13 +703,11 @@
         "Draw a scientist in a lab 🧪",
         "Draw the solar system ☀️"
       ];
-      const prompt = prompts[Math.floor(Math.random() * prompts.length)];
-      document.getElementById("drawingPrompt").textContent = prompt;
+      document.getElementById("drawingPrompt").textContent = prompts[Math.floor(Math.random() * prompts.length)];
     }
 
-    // Coloring book mode
+    // Coloring Book
     function startColoringBook() {
-      console.log("Starting coloring book");
       saveDrawingState();
       coloringBookMode = true;
       connectDotsMode = false;
@@ -671,14 +727,13 @@
       tempCtx.strokeStyle = "black";
       tempCtx.lineWidth = 2;
       tempCtx.beginPath();
-      tempCtx.arc(canvas.width/2, canvas.height/2, 100, 0, Math.PI * 2);
+      tempCtx.arc(canvas.width / 2, canvas.height / 2, 100, 0, Math.PI * 2);
       tempCtx.stroke();
       return tempCanvas.toDataURL();
     }
 
-    // Connect-the-dots mode
+    // Connect-the-Dots
     function startConnectDots() {
-      console.log("Starting connect-the-dots");
       saveDrawingState();
       connectDotsMode = true;
       coloringBookMode = false;
@@ -695,9 +750,7 @@
       const radius = 100;
       for (let i = 0; i < numDots; i++) {
         const angle = (i / numDots) * Math.PI * 2;
-        const x = centerX + Math.cos(angle) * radius;
-        const y = centerY + Math.sin(angle) * radius;
-        points.push({ x, y, number: i + 1 });
+        points.push({ x: centerX + Math.cos(angle) * radius, y: centerY + Math.sin(angle) * radius, number: i + 1 });
       }
       return points;
     }
@@ -714,12 +767,10 @@
     }
 
     function handleSpecialMode(e) {
-      const rect = canvas.getBoundingClientRect();
-      const x = (e.clientX || e.touches[0].clientX) - rect.left;
-      const y = (e.clientY || e.touches[0].clientY) - rect.top;
+      const { x, y } = getCanvasCoords(e, canvas);
       if (connectDotsMode) {
         const clickedDot = dotPoints.find(dot => 
-          Math.sqrt((dot.x - x) ** 2 + (dot.y - y) ** 2) < 10
+          Math.hypot(dot.x - x, dot.y - y) < 10
         );
         if (clickedDot && clickedDot.number === dotPoints[0].number) {
           saveDrawingState();
@@ -739,10 +790,9 @@
       }
     }
 
-    // Save/export functions
+    // Save/export
     function saveImage(type) {
-      console.log(`Saving image as: ${type}`);
-      let link = document.createElement("a");
+      const link = document.createElement("a");
       const fileName = `DrawHelloKitty_${new Date().toISOString().slice(0,10)}.${type}`;
       link.download = fileName;
       if (type === "pdf") {
@@ -753,7 +803,6 @@
           pdf.addImage(imgData, "PNG", 10, 10, canvas.width / 4, canvas.height / 4);
           pdf.save(fileName);
         } catch (e) {
-          console.error("PDF save error:", e);
           alert("PDF export failed. Try PNG.");
         }
         return;
@@ -762,27 +811,407 @@
       link.click();
     }
 
+    // Music control
+    function toggleMusic() {
+      isMusicMuted = !isMusicMuted;
+      document.querySelector(".mute-button").textContent = isMusicMuted ? "🎶 Play Music" : "🎵 Mute Music";
+      if (currentMusic) {
+        if (isMusicMuted) {
+          currentMusic.pause();
+        } else {
+          currentMusic.play();
+        }
+      }
+    }
+
+    function playMusic(musicId) {
+      stopMusic();
+      currentMusic = document.getElementById(musicId);
+      if (!isMusicMuted) {
+        currentMusic.play().catch(() => {});
+      }
+    }
+
+    function stopMusic() {
+      if (currentMusic) {
+        currentMusic.pause();
+        currentMusic.currentTime = 0;
+      }
+    }
+
     // Game functions
     function closeGame() {
-      console.log("Closing game");
       document.getElementById("gameContainer").style.display = "none";
       gameCanvas.onclick = null;
       document.querySelectorAll(".reward-animation").forEach(el => el.remove());
       currentGame = null;
       gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+      stopMusic();
     }
 
-    function showRewardAnimation() {
+    function showRewardAnimation(emoji = "😺") {
       const reward = document.createElement("div");
       reward.className = "reward-animation";
-      reward.textContent = "😺";
+      reward.textContent = emoji;
       document.getElementById("gameContainer").appendChild(reward);
       setTimeout(() => reward.remove(), 1500);
     }
 
+    // Barbie Dress-Up Game
+    function startBarbieDressUp() {
+      currentGame = "barbieDressUp";
+      document.getElementById("gameContainer").style.display = "flex";
+      document.getElementById("gameTitle").textContent = "Barbie Dress-Up Game";
+      document.getElementById("gameInstructions").textContent = "Click to choose dolls, dresses, makeup, and themes! 👗";
+      gameScore = 0;
+      document.getElementById("gameScore").textContent = `Creations: ${gameScore}`;
+      playMusic("barbieMusic");
+      renderBarbieDressUp();
+      gameCanvas.onclick = handleBarbieDressUp;
+    }
+
+    function renderBarbieDressUp() {
+      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+      const theme = barbieOutfits[selectedDoll].theme;
+      gameCtx.fillStyle = theme === "beach" ? "#fffacd" : theme === "royal" ? "#e6e6fa" : "#f0f0f0";
+      gameCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+      gameCtx.fillStyle = barbieOutfits[selectedDoll].color;
+      gameCtx.beginPath();
+      gameCtx.moveTo(200, 100);
+      gameCtx.lineTo(150, 300);
+      gameCtx.lineTo(250, 300);
+      gameCtx.closePath();
+      gameCtx.fill();
+      if (barbieOutfits[selectedDoll].dress === "party") {
+        gameCtx.fillStyle = "white";
+        for (let i = 0; i < 5; i++) {
+          gameCtx.beginPath();
+          gameCtx.arc(170 + i * 20, 150 + i * 30, 5, 0, Math.PI * 2);
+          gameCtx.fill();
+        }
+      } else if (barbieOutfits[selectedDoll].dress === "princess") {
+        gameCtx.fillStyle = "gold";
+        gameCtx.fillRect(180, 120, 40, 80);
+      } else if (barbieOutfits[selectedDoll].dress === "sporty") {
+        gameCtx.fillStyle = "black";
+        gameCtx.fillRect(170, 150, 60, 20);
+      }
+      if (barbieOutfits[selectedDoll].makeup === "lipstick") {
+        gameCtx.fillStyle = "red";
+        gameCtx.fillRect(190, 110, 20, 5);
+      } else if (barbieOutfits[selectedDoll].makeup === "eyeshadow") {
+        gameCtx.fillStyle = "blue";
+        gameCtx.fillRect(180, 100, 40, 5);
+      }
+      const dolls = ["barbie", "ken", "skipper"];
+      for (let i = 0; i < dolls.length; i++) {
+        gameCtx.fillStyle = selectedDoll === dolls[i] ? "#ff66b2" : "#ff99cc";
+        gameCtx.fillRect(50 + i * 100, 10, 80, 40);
+        gameCtx.fillStyle = "white";
+        gameCtx.fillText(dolls[i], 60 + i * 100, 35);
+      }
+      const dresses = ["party", "princess", "sporty"];
+      for (let i = 0; i < dresses.length; i++) {
+        gameCtx.fillStyle = barbieOutfits[selectedDoll].dress === dresses[i] ? "#ff66b2" : "#ff99cc";
+        gameCtx.fillRect(50 + i * 100, 60, 80, 40);
+        gameCtx.fillStyle = "white";
+        gameCtx.fillText(dresses[i], 60 + i * 100, 85);
+      }
+      const makeup = ["none", "lipstick", "eyeshadow"];
+      for (let i = 0; i < makeup.length; i++) {
+        gameCtx.fillStyle = barbieOutfits[selectedDoll].makeup === makeup[i] ? "#ff66b2" : "#ff99cc";
+        gameCtx.fillRect(50 + i * 100, 110, 80, 40);
+        gameCtx.fillStyle = "white";
+        gameCtx.fillText(makeup[i], 60 + i * 100, 135);
+      }
+      const themes = ["beach", "royal", "city"];
+      for (let i = 0; i < themes.length; i++) {
+        gameCtx.fillStyle = barbieOutfits[selectedDoll].theme === themes[i] ? "#ff66b2" : "#ff99cc";
+        gameCtx.fillRect(50 + i * 100, 160, 80, 40);
+        gameCtx.fillStyle = "white";
+        gameCtx.fillText(themes[i], 60 + i * 100, 185);
+      }
+    }
+
+    function handleBarbieDressUp(e) {
+      const { x, y } = getCanvasCoords(e, gameCanvas);
+      if (y >= 10 && y <= 50) {
+        const index = Math.floor((x - 50) / 100);
+        if (index >= 0 && index < 3) {
+          selectedDoll = ["barbie", "ken", "skipper"][index];
+          gameScore++;
+          showRewardAnimation("👗");
+          document.getElementById("gameScore").textContent = `Creations: ${gameScore}`;
+          renderBarbieDressUp();
+        }
+      } else if (y >= 60 && y <= 100) {
+        const index = Math.floor((x - 50) / 100);
+        if (index >= 0 && index < 3) {
+          barbieOutfits[selectedDoll].dress = ["party", "princess", "sporty"][index];
+          gameScore++;
+          showRewardAnimation("👗");
+          document.getElementById("gameScore").textContent = `Creations: ${gameScore}`;
+          renderBarbieDressUp();
+        }
+      } else if (y >= 110 && y <= 150) {
+        const index = Math.floor((x - 50) / 100);
+        if (index >= 0 && index < 3) {
+          barbieOutfits[selectedDoll].makeup = ["none", "lipstick", "eyeshadow"][index];
+          gameScore++;
+          showRewardAnimation("💄");
+          document.getElementById("gameScore").textContent = `Creations: ${gameScore}`;
+          renderBarbieDressUp();
+        }
+      } else if (y >= 160 && y <= 200) {
+        const index = Math.floor((x - 50) / 100);
+        if (index >= 0 && index < 3) {
+          barbieOutfits[selectedDoll].theme = ["beach", "royal", "city"][index];
+          gameScore++;
+          showRewardAnimation("🌴");
+          document.getElementById("gameScore").textContent = `Creations: ${gameScore}`;
+          renderBarbieDressUp();
+        }
+      }
+    }
+
+    // Unicorn Talking Game
+    function startUnicornTalking() {
+      currentGame = "unicornTalking";
+      document.getElementById("gameContainer").style.display = "flex";
+      document.getElementById("gameTitle").textContent = "Unicorn Talking Game";
+      document.getElementById("gameInstructions").innerHTML = 'Type a message and press Enter to talk to the unicorn! <input type="text" id="unicornInput" style="width: 200px;" aria-label="Unicorn Message Input"/>';
+      gameScore = 0;
+      document.getElementById("gameScore").textContent = `Messages: ${gameScore}`;
+      playMusic("unicornMusic");
+      renderUnicornTalking();
+      const input = document.getElementById("unicornInput");
+      input.focus();
+      input.onkeydown = (e) => {
+        if (e.key === "Enter" && input.value.trim()) {
+          gameScore++;
+          document.getElementById("gameScore").textContent = `Messages: ${gameScore}`;
+          showRewardAnimation("🦄");
+          renderUnicornTalking(input.value.trim());
+          input.value = "";
+        }
+      };
+      gameCanvas.onclick = () => input.focus();
+    }
+
+    function renderUnicornTalking(message = "") {
+      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+      gameCtx.fillStyle = "#e0f7fa";
+      gameCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+      gameCtx.font = "60px serif";
+      gameCtx.fillStyle = "black";
+      gameCtx.fillText("🦄", 150, 250);
+      if (message) {
+        gameCtx.font = "20px Comic Sans MS";
+        gameCtx.fillStyle = "black";
+        const response = unicornMessages[Math.floor(Math.random() * unicornMessages.length)];
+        gameCtx.fillText(response, 50, 50);
+      }
+    }
+
+    // Robotics Game
+    function startRoboticsGame() {
+      currentGame = "robotics";
+      document.getElementById("gameContainer").style.display = "flex";
+      document.getElementById("gameTitle").textContent = "Robotics Game";
+      document.getElementById("gameInstructions").textContent = "Drag components to build a circuit! Connect correctly to light up! 💡";
+      gameScore = 0;
+      document.getElementById("gameScore").textContent = `Circuits: ${gameScore}`;
+      circuitComponents = [
+        { type: "battery", x: 50, y: 320, placed: false },
+        { type: "wire", x: 150, y: 320, placed: false },
+        { type: "led", x: 250, y: 320, placed: false }
+      ];
+      playMusic("roboticsMusic");
+      renderRoboticsGame();
+      gameCanvas.onmousedown = startDragComponent;
+      gameCanvas.onmousemove = dragComponent;
+      gameCanvas.onmouseup = dropComponent;
+    }
+
+    function renderRoboticsGame() {
+      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+      gameCtx.fillStyle = "#f0f0f0";
+      gameCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+      circuitComponents.forEach(comp => {
+        gameCtx.fillStyle = comp.type === "battery" ? "#ff0000" : comp.type === "wire" ? "#0000ff" : "#00ff00";
+        gameCtx.fillRect(comp.x, comp.y, 80, 40);
+        gameCtx.fillStyle = "white";
+        gameCtx.fillText(comp.type, comp.x + 10, comp.y + 25);
+      });
+      const placed = circuitComponents.filter(c => c.placed);
+      placed.forEach((comp, i) => {
+        gameCtx.fillStyle = comp.type === "battery" ? "#ff0000" : comp.type === "wire" ? "#0000ff" : "#00ff00";
+        gameCtx.fillRect(100 + i * 100, 150, 80, 40);
+      });
+      if (placed.length === 3) {
+        gameCtx.fillStyle = "yellow";
+        gameCtx.beginPath();
+        gameCtx.arc(300, 150, 20, 0, Math.PI * 2);
+        gameCtx.fill();
+        gameScore++;
+        showRewardAnimation("💡");
+        document.getElementById("gameScore").textContent = `Circuits: ${gameScore}`;
+        circuitComponents.forEach(c => (c.placed = false));
+      }
+    }
+
+    function startDragComponent(e) {
+      const { x, y } = getCanvasCoords(e, gameCanvas);
+      selectedComponent = circuitComponents.find(c => 
+        x >= c.x && x <= c.x + 80 && y >= c.y && y <= c.y + 40 && !c.placed
+      );
+    }
+
+    function dragComponent(e) {
+      if (!selectedComponent) return;
+      const { x, y } = getCanvasCoords(e, gameCanvas);
+      selectedComponent.x = x - 40;
+      selectedComponent.y = y - 20;
+      renderRoboticsGame();
+    }
+
+    function dropComponent() {
+      if (selectedComponent && selectedComponent.y < 200) {
+        selectedComponent.placed = true;
+      }
+      selectedComponent = null;
+      renderRoboticsGame();
+    }
+
+    // Car Building Game
+    function startCarBuildingGame() {
+      currentGame = "carBuilding";
+      document.getElementById("gameContainer").style.display = "flex";
+      document.getElementById("gameTitle").textContent = "Car Building Game";
+      document.getElementById("gameInstructions").textContent = "Click to add wheels, motor, and battery to build a car! 🚗";
+      gameScore = 0;
+      document.getElementById("gameScore").textContent = `Cars Built: ${gameScore}`;
+      carParts = { wheels: false, motor: false, battery: false };
+      carBuilt = false;
+      playMusic("carMusic");
+      renderCarBuildingGame();
+      gameCanvas.onclick = handleCarBuildingClick;
+    }
+
+    function renderCarBuildingGame() {
+      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+      gameCtx.fillStyle = "#f0f0f0";
+      gameCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+      if (carBuilt) {
+        gameCtx.fillStyle = "red";
+        gameCtx.fillRect(100 + gameScore * 50, 150, 100, 50);
+        gameCtx.fillStyle = "black";
+        gameCtx.beginPath();
+        gameCtx.arc(120, 200, 15, 0, Math.PI * 2);
+        gameCtx.arc(180, 200, 15, 0, Math.PI * 2);
+        gameCtx.fill();
+        return;
+      }
+      gameCtx.fillStyle = carParts.wheels ? "#000000" : "#999999";
+      gameCtx.beginPath();
+      gameCtx.arc(120, 200, 15, 0, Math.PI * 2);
+      gameCtx.arc(180, 200, 15, 0, Math.PI * 2);
+      gameCtx.fill();
+      gameCtx.fillStyle = carParts.motor ? "#0000ff" : "#6666ff";
+      gameCtx.fillRect(140, 160, 40, 20);
+      gameCtx.fillStyle = carParts.battery ? "#ff0000" : "#ff6666";
+      gameCtx.fillRect(100, 160, 40, 20);
+      const parts = ["wheels", "motor", "battery"];
+      parts.forEach((part, i) => {
+        gameCtx.fillStyle = carParts[part] ? "#ff66b2" : "#ff99cc";
+        gameCtx.fillRect(50 + i * 100, 320, 80, 40);
+        gameCtx.fillStyle = "white";
+        gameCtx.fillText(part, 60 + i * 100, 345);
+      });
+    }
+
+    function handleCarBuildingClick(e) {
+      const { x, y } = getCanvasCoords(e, gameCanvas);
+      if (y >= 320 && y <= 360) {
+        const index = Math.floor((x - 50) / 100);
+        if (index >= 0 && index < 3) {
+          const part = ["wheels", "motor", "battery"][index];
+          carParts[part] = true;
+          if (carParts.wheels && carParts.motor && carParts.battery) {
+            carBuilt = true;
+            gameScore++;
+            showRewardAnimation("🚗");
+            document.getElementById("gameScore").textContent = `Cars Built: ${gameScore}`;
+            setTimeout(() => {
+              carParts = { wheels: false, motor: false, battery: false };
+              carBuilt = false;
+              renderCarBuildingGame();
+            }, 2000);
+          }
+          renderCarBuildingGame();
+        }
+      }
+    }
+
+    // IoT Smart Home Game
+    function startIoTSmartHome() {
+      currentGame = "iotSmartHome";
+      document.getElementById("gameContainer").style.display = "flex";
+      document.getElementById("gameTitle").textContent = "Smart Home Game";
+      document.getElementById("gameInstructions").textContent = "Click to control home devices! Watch the TV play YouTube! 📺";
+      gameScore = 0;
+      document.getElementById("gameScore").textContent = `Devices Controlled: ${gameScore}`;
+      smartHomeDevices = { fan: false, geyser: false, fridge: false, phone: false, tv: false };
+      playMusic("iotMusic");
+      renderIoTSmartHome();
+      gameCanvas.onclick = handleIoTSmartHomeClick;
+    }
+
+    function renderIoTSmartHome() {
+      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+      gameCtx.fillStyle = "#f0f0f0";
+      gameCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+      const devices = ["fan", "geyser", "fridge", "phone", "tv"];
+      devices.forEach((device, i) => {
+        gameCtx.fillStyle = smartHomeDevices[device] ? "#ff66b2" : "#ff99cc";
+        gameCtx.fillRect(50 + i * 70, 300, 60, 40);
+        gameCtx.fillStyle = "white";
+        gameCtx.fillText(device, 55 + i * 70, 325);
+      });
+      gameCtx.fillStyle = "#d3d3d3";
+      gameCtx.fillRect(100, 50, 200, 150);
+      if (smartHomeDevices.tv) {
+        gameCtx.fillStyle = "red";
+        gameCtx.fillRect(120, 70, 160, 90);
+        gameCtx.fillStyle = "white";
+        gameCtx.fillText("YouTube", 160, 120);
+      }
+      devices.forEach((device, i) => {
+        if (smartHomeDevices[device]) {
+          gameCtx.font = "40px serif";
+          gameCtx.fillStyle = "black";
+          gameCtx.fillText(device === "fan" ? "🌀" : device === "geyser" ? "💧" : device === "fridge" ? "❄️" : device === "phone" ? "📱" : "📺", 150 + i * 30, 250);
+        }
+      });
+    }
+
+    function handleIoTSmartHomeClick(e) {
+      const { x, y } = getCanvasCoords(e, gameCanvas);
+      if (y >= 300 && y <= 340) {
+        const index = Math.floor((x - 50) / 70);
+        if (index >= 0 && index < 5) {
+          const device = ["fan", "geyser", "fridge", "phone", "tv"][index];
+          smartHomeDevices[device] = !smartHomeDevices[device];
+          gameScore++;
+          showRewardAnimation(device === "tv" ? "📺" : "🏠");
+          document.getElementById("gameScore").textContent = `Devices Controlled: ${gameScore}`;
+          renderIoTSmartHome();
+        }
+      }
+    }
+
     // Science Quiz Game
     function startScienceQuiz() {
-      console.log("Starting Science Quiz");
       currentGame = "scienceQuiz";
       document.getElementById("gameContainer").style.display = "flex";
       document.getElementById("gameTitle").textContent = "Science Quiz Game";
@@ -821,21 +1250,17 @@
     }
 
     function handleQuizAnswer(e) {
-      console.log("Quiz answer clicked");
-      const rect = gameCanvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      const { x, y } = getCanvasCoords(e, gameCanvas);
       const q = questions[currentQuestion];
       for (let i = 0; i < q.answers.length; i++) {
         if (x >= 50 && x <= 350 && y >= 150 + i * 60 && y <= 200 + i * 60) {
           if (i === q.correct) {
             gameScore += 10;
             showRewardAnimation();
-            document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
           } else {
             gameScore = Math.max(0, gameScore - 2);
-            document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
           }
+          document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
           currentQuestion++;
           renderScienceQuiz();
           break;
@@ -843,87 +1268,8 @@
       }
     }
 
-    // Barbie Dress-Up Game
-    function startBarbieDressUp() {
-      console.log("Starting Barbie Dress-Up");
-      currentGame = "barbieDressUp";
-      document.getElementById("gameContainer").style.display = "flex";
-      document.getElementById("gameTitle").textContent = "Barbie Dress-Up Game";
-      document.getElementById("gameInstructions").textContent = "Click to change Barbie's dress color or pattern! 👗";
-      gameScore = 0;
-      document.getElementById("gameScore").textContent = `Creations: ${gameScore}`;
-      barbieOutfit = { dressColor: "#ff66b2", pattern: "none" };
-      renderBarbieDressUp();
-      gameCanvas.onclick = handleBarbieDressUp;
-    }
-
-    function renderBarbieDressUp() {
-      gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-      gameCtx.fillStyle = barbieOutfit.dressColor;
-      gameCtx.beginPath();
-      gameCtx.moveTo(200, 100);
-      gameCtx.lineTo(150, 300);
-      gameCtx.lineTo(250, 300);
-      gameCtx.closePath();
-      gameCtx.fill();
-      if (barbieOutfit.pattern === "stars") {
-        gameCtx.fillStyle = "white";
-        for (let i = 0; i < 5; i++) {
-          gameCtx.beginPath();
-          gameCtx.arc(170 + i * 20, 150 + i * 30, 5, 0, Math.PI * 2);
-          gameCtx.fill();
-        }
-      }
-      const colors = ["#ff66b2", "#66b3ff", "#66ffb3"];
-      for (let i = 0; i < colors.length; i++) {
-        gameCtx.fillStyle = colors[i];
-        gameCtx.fillRect(50 + i * 100, 320, 80, 40);
-      }
-      gameCtx.fillStyle = "#ff99cc";
-      gameCtx.fillRect(50, 360, 80, 40);
-      gameCtx.fillStyle = "white";
-      gameCtx.fillText("None", 60, 385);
-      gameCtx.fillStyle = "#ff99cc";
-      gameCtx.fillRect(150, 360, 80, 40);
-      gameCtx.fillStyle = "white";
-      gameCtx.fillText("Stars", 160, 385);
-    }
-
-    function handleBarbieDressUp(e) {
-      console.log("Barbie dress-up clicked");
-      const rect = gameCanvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      if (y >= 320 && y <= 360) {
-        const index = Math.floor((x - 50) / 100);
-        if (index >= 0 && index < 3) {
-          barbieOutfit.dressColor = ["#ff66b2", "#66b3ff", "#66ffb3"][index];
-          gameScore++;
-          showRewardAnimation();
-          document.getElementById("gameScore").textContent = `Creations: ${gameScore}`;
-          renderBarbieDressUp();
-        }
-      }
-      if (y >= 360 && y <= 400) {
-        if (x >= 50 && x <= 130) {
-          barbieOutfit.pattern = "none";
-          gameScore++;
-          showRewardAnimation();
-          document.getElementById("gameScore").textContent = `Creations: ${gameScore}`;
-          renderBarbieDressUp();
-        } else if (x >= 150 && x <= 230) {
-          barbieOutfit.pattern = "stars";
-          gameScore++;
-          showRewardAnimation();
-          document.getElementById("gameScore").textContent = `Creations: ${gameScore}`;
-          renderBarbieDressUp();
-        }
-      }
-    }
-
     // Science Experiment Game
     function startScienceExperiment() {
-      console.log("Starting Science Experiment");
       currentGame = "scienceExperiment";
       document.getElementById("gameContainer").style.display = "flex";
       document.getElementById("gameTitle").textContent = "Science Experiment Game";
@@ -965,17 +1311,14 @@
     }
 
     function handleExperimentMix(e) {
-      console.log("Experiment chemical clicked");
-      const rect = gameCanvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      const { x, y } = getCanvasCoords(e, gameCanvas);
       if (y >= 320 && y <= 360) {
         const index = Math.floor((x - 50) / 100);
         if (index >= 0 && index < 3) {
           experimentChemicals.push(["#ff0000", "#00ff00", "#0000ff"][index]);
           if (experimentChemicals.length > 2) experimentChemicals.shift();
           gameScore++;
-          showRewardAnimation();
+          showRewardAnimation("🧪");
           document.getElementById("gameScore").textContent = `Reactions: ${gameScore}`;
           renderScienceExperiment();
         }
@@ -984,7 +1327,6 @@
 
     // Clock Time Game
     function startClockTimeGame() {
-      console.log("Starting Clock Time Game");
       currentGame = "clockTime";
       document.getElementById("gameContainer").style.display = "flex";
       document.getElementById("gameTitle").textContent = "Clock Time Game";
@@ -1000,13 +1342,14 @@
     function generateTargetTime() {
       const hours = [1, 3, 6, 9, 12];
       const minutes = [0, 30];
-      targetTime.hour = hours[Math.floor(Math.random() * hours.length)];
-      targetTime.minute = minutes[Math.floor(Math.random() * minutes.length)];
+      targetTime = {
+        hour: hours[Math.floor(Math.random() * hours.length)],
+        minute: minutes[Math.floor(Math.random() * minutes.length)]
+      };
     }
 
     function renderClockTimeGame() {
       gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-      // Draw clock face
       gameCtx.beginPath();
       gameCtx.arc(200, 200, 150, 0, Math.PI * 2);
       gameCtx.fillStyle = "#ffccff";
@@ -1014,14 +1357,12 @@
       gameCtx.strokeStyle = "black";
       gameCtx.lineWidth = 5;
       gameCtx.stroke();
-      // Draw numbers
       gameCtx.font = "20px Comic Sans MS";
       gameCtx.fillStyle = "black";
       for (let i = 1; i <= 12; i++) {
         const angle = (i * 30 - 90) * Math.PI / 180;
         gameCtx.fillText(i, 200 + Math.cos(angle) * 120 - 10, 200 + Math.sin(angle) * 120 + 10);
       }
-      // Draw hour hand
       const hourAngle = (clockHands.hour % 12 * 30 + clockHands.minute / 2 - 90) * Math.PI / 180;
       gameCtx.beginPath();
       gameCtx.moveTo(200, 200);
@@ -1029,7 +1370,6 @@
       gameCtx.strokeStyle = "black";
       gameCtx.lineWidth = 8;
       gameCtx.stroke();
-      // Draw minute hand
       const minuteAngle = (clockHands.minute * 6 - 90) * Math.PI / 180;
       gameCtx.beginPath();
       gameCtx.moveTo(200, 200);
@@ -1037,12 +1377,10 @@
       gameCtx.strokeStyle = "black";
       gameCtx.lineWidth = 4;
       gameCtx.stroke();
-      // Draw target time
       gameCtx.font = "20px Comic Sans MS";
       gameCtx.fillStyle = "black";
       const timeString = `${targetTime.hour}:${targetTime.minute === 0 ? '00' : '30'}`;
       gameCtx.fillText(`Set the clock to ${timeString}`, 50, 50);
-      // Draw hand adjustment buttons
       gameCtx.fillStyle = "#ff66b2";
       gameCtx.fillRect(50, 320, 80, 40);
       gameCtx.fillRect(150, 320, 80, 40);
@@ -1052,10 +1390,7 @@
     }
 
     function handleClockTimeClick(e) {
-      console.log("Clock time clicked");
-      const rect = gameCanvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      const { x, y } = getCanvasCoords(e, gameCanvas);
       if (y >= 320 && y <= 360) {
         if (x >= 50 && x <= 130) {
           clockHands.hour = (clockHands.hour + 1) % 12;
@@ -1065,7 +1400,7 @@
         renderClockTimeGame();
         if (clockHands.hour === targetTime.hour && clockHands.minute === targetTime.minute) {
           gameScore += 10;
-          showRewardAnimation();
+          showRewardAnimation("⏰");
           document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
           generateTargetTime();
           clockHands = { hour: 0, minute: 0 };
@@ -1076,7 +1411,6 @@
 
     // Shopkeeper Money Game
     function startShopkeeperMoneyGame() {
-      console.log("Starting Shopkeeper Money Game");
       currentGame = "shopkeeperMoney";
       document.getElementById("gameContainer").style.display = "flex";
       document.getElementById("gameTitle").textContent = "Shopkeeper Money Game";
@@ -1100,14 +1434,11 @@
 
     function renderShopkeeperMoneyGame() {
       gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-      // Draw shop background
       gameCtx.fillStyle = "#ffccff";
       gameCtx.fillRect(0, 0, 400, 400);
-      // Draw shopkeeper
       gameCtx.font = "60px serif";
       gameCtx.fillStyle = "black";
       gameCtx.fillText("😺", 50, 100);
-      // Draw speech bubble
       gameCtx.fillStyle = "white";
       gameCtx.fillRect(100, 50, 250, 80);
       gameCtx.strokeStyle = "black";
@@ -1116,7 +1447,6 @@
       gameCtx.font = "20px Comic Sans MS";
       gameCtx.fillStyle = "black";
       gameCtx.fillText(`Hello! ${shopItem.name} costs $${shopItem.price}!`, 110, 90);
-      // Draw money options
       for (let i = 0; i < moneyOptions.length; i++) {
         gameCtx.fillStyle = "#ff66b2";
         gameCtx.fillRect(50 + i * 100, 320, 80, 40);
@@ -1126,16 +1456,13 @@
     }
 
     function handleShopkeeperMoneyClick(e) {
-      console.log("Shopkeeper money clicked");
-      const rect = gameCanvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      const { x, y } = getCanvasCoords(e, gameCanvas);
       if (y >= 320 && y <= 360) {
         const index = Math.floor((x - 50) / 100);
         if (index >= 0 && index < 3) {
           if (moneyOptions[index] === shopItem.price) {
             gameScore += 10;
-            showRewardAnimation();
+            showRewardAnimation("💸");
             document.getElementById("gameScore").textContent = `Score: ${gameScore}`;
             generateShopItem();
             renderShopkeeperMoneyGame();
@@ -1147,9 +1474,8 @@
       }
     }
 
-    // Tutorial functions
+    // Tutorial
     function showStepByStep(type) {
-      console.log(`Starting tutorial: ${type}`);
       document.getElementById("gameContainer").style.display = "flex";
       document.getElementById("gameTitle").textContent = `Learn to Draw a ${type.charAt(0).toUpperCase() + type.slice(1)}`;
       document.getElementById("gameInstructions").textContent = "Click to see the next step! ✏️";
@@ -1251,7 +1577,6 @@
       let currentStep = 0;
       steps[type][currentStep]();
       gameCanvas.onclick = () => {
-        console.log(`Advancing to step ${currentStep + 1}`);
         currentStep = (currentStep + 1) % steps[type].length;
         steps[type][currentStep]();
       };
